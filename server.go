@@ -6,5 +6,12 @@ import (
 )
 
 func ProfileServer(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Peter's Profile")
+	username := r.URL.Path[len("/profiles/"):]
+
+	if username == "Peter" {
+		fmt.Fprint(w, "Peter's Profile")
+	}
+	if username == "Chris" {
+		fmt.Fprint(w, "Chris's Profile")
+	}
 }
