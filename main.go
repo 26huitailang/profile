@@ -1,13 +1,16 @@
 package main
 
 import (
-	"log"
-	"net/http"
+	v1 "profile/api/v1"
+
+	"github.com/labstack/echo"
 )
 
 func main() {
-	handler := http.HandlerFunc(ProfileServer)
-	if err := http.ListenAndServe(":5000", handler); err != nil {
-		log.Fatalf("could not listen on port 5000 %v", err)
-	}
+	e := echo.New()
+	h := &v1.ViewHandler{}
+
+	e.GET("/profiles/:username", h.Profiles)
+
+	e.Logger.Fatal(e.Start(":1323"))
 }
