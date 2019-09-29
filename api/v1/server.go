@@ -2,14 +2,27 @@ package v1
 
 import (
 	"net/http"
+	"profile/model"
 
 	"github.com/labstack/echo"
 )
 
-type Store interface{}
+type Store interface {
+	GoodsManager
+}
+
+type GoodsManager interface {
+	GetAllGoods() []model.Goods
+}
 
 type ViewHandler struct {
 	store Store
+}
+
+func NewViewHandler(store Store) *ViewHandler {
+	return &ViewHandler{
+		store: store,
+	}
 }
 
 func (h *ViewHandler) Profiles(c echo.Context) error {
