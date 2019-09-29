@@ -21,7 +21,7 @@ func main() {
 	h := v1.NewViewHandler(store)
 
 	e.GET("/profiles/:username", h.Profiles)
-	e.GET("/goods", h.Goods)
+	e.GET("/goods", h.GetGoods)
 
 	e.Logger.Fatal(e.Start(":5000"))
 }

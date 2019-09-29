@@ -11,10 +11,6 @@ type Store interface {
 	GoodsManager
 }
 
-type GoodsManager interface {
-	GetAllGoods() []model.Goods
-}
-
 type ViewHandler struct {
 	store Store
 }
