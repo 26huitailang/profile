@@ -30,12 +30,12 @@ func TestGoodsManger_GetAllGoods(t *testing.T) {
 			defer removeTestDB(t, TestDBName)
 			db, closeDB := database.NewDB(TestDBName)
 			defer closeDB()
-			db.AutoMigrate(&Goods{}, &GoddsProfile{}, &GoodsImage{})
+			db.AutoMigrate(&Goods{}, &GoodsProfile{}, &GoodsImage{})
 			m := &GoodsManger{
 				db: db,
 			}
 			for _, item := range tt.want {
-				m.InsertOneGoods(item)
+				m.InsertOneGoods(&item)
 			}
 			if got := m.GetAllGoods(); len(got) != len(tt.want) {
 				t.Errorf("GoodsManger.GetAllGoods() len %v, want len %v", len(got), len(tt.want))

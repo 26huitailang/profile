@@ -3,7 +3,6 @@ package model
 import (
 	"time"
 
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
@@ -14,26 +13,33 @@ const (
 	Electronics
 )
 
+type CustomModel struct {
+	ID        uint       `json:"id";gorm:"primary_key"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updateAt"`
+	DeletedAt *time.Time `json:"deletedAt";sql:"index"`
+}
+
 type Goods struct {
-	gorm.Model
-	Name        string
-	Description string
-	Price       uint
-	Category    uint
-	Images      []GoodsImage
-	Profile     GoddsProfile
-	ProfileID   uint
+	CustomModel
+	Name        string       `json:"name";gorm:"not null;unique"`
+	Description string       `json:"description"`
+	Price       uint         `json:"price"`
+	Category    uint         `json:"category"`
+	Images      []GoodsImage `json:"images"`
+	Profile     GoodsProfile `json:"profile"`
+	ProfileID   uint         `json:"profileID"`
 }
 
 type GoodsImage struct {
-	gorm.Model
-	GoodsID uint
-	Path    string
+	CustomModel
+	GoodsID uint   `json:"goodsID"`
+	Path    string `json:"path"`
 }
 
-type GoddsProfile struct {
-	gorm.Model
-	BuyAt            time.Time
-	ExpireAt         time.Time
-	DepreciationRate float32
+type GoodsProfile struct {
+	CustomModel
+	BuyAt            time.Time `json:"buyAt"`
+	ExpireAt         time.Time `json:"expireAt"`
+	DepreciationRate float32   `json:"depreciationRate"`
 }

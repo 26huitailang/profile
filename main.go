@@ -14,14 +14,16 @@ func main() {
 	defer closeDB()
 
 	// 自动迁移模式
-	db.AutoMigrate(&model.Goods{}, &model.GoddsProfile{}, &model.GoodsImage{})
+	db.AutoMigrate(&model.Goods{}, &model.GoodsProfile{}, &model.GoodsImage{})
 
 	e := echo.New()
 	store := model.NewGoodsManager(db)
 	h := v1.NewViewHandler(store)
 
 	e.GET("/profiles/:username", h.Profiles)
-	e.GET("/goods", h.GetGoods)
+	e.GET("/goods", h.FindGoods)
+	e.POST("/goods", h.CreateGoods)
+	e.PUT("/goods/:id", h.EditGoods)
 
 	e.Logger.Fatal(e.Start(":5000"))
 }

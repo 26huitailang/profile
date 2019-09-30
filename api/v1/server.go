@@ -2,7 +2,6 @@ package v1
 
 import (
 	"net/http"
-	"profile/model"
 
 	"github.com/labstack/echo"
 )
