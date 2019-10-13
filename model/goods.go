@@ -16,30 +16,24 @@ const (
 type CustomModel struct {
 	ID        uint       `json:"id";gorm:"primary_key"`
 	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt time.Time  `json:"updateAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
 	DeletedAt *time.Time `json:"deletedAt";sql:"index"`
 }
 
 type Goods struct {
 	CustomModel
-	Name        string       `json:"name";gorm:"not null;unique"`
-	Description string       `json:"description"`
-	Price       uint         `json:"price"`
-	Category    uint         `json:"category"`
-	Images      []GoodsImage `json:"images"`
-	Profile     GoodsProfile `json:"profile"`
-	ProfileID   uint         `json:"profileID"`
+	Name             string       `json:"name" gorm:"not null;unique"`
+	Description      string       `json:"description"`
+	Price            uint         `json:"price"`
+	Category         uint         `json:"category"`
+	Images           []GoodsImage `json:"images"`
+	BuyAt            time.Time    `json:"buyAt"`
+	ExpireAt         time.Time    `json:"expireAt"`
+	DepreciationRate float32      `json:"depreciationRate"` // percent per day
 }
 
 type GoodsImage struct {
 	CustomModel
 	GoodsID uint   `json:"goodsID"`
 	Path    string `json:"path"`
-}
-
-type GoodsProfile struct {
-	CustomModel
-	BuyAt            time.Time `json:"buyAt"`
-	ExpireAt         time.Time `json:"expireAt"`
-	DepreciationRate float32   `json:"depreciationRate"`
 }

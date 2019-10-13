@@ -16,7 +16,7 @@ func main() {
 	defer closeDB()
 
 	// 自动迁移模式
-	db.AutoMigrate(&model.Goods{}, &model.GoodsProfile{}, &model.GoodsImage{})
+	db.AutoMigrate(&model.Goods{}, &model.GoodsImage{})
 
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -28,9 +28,13 @@ func main() {
 	h := v1.NewViewHandler(store)
 
 	e.GET("/profiles/:username", h.Profiles)
-	e.GET("/goods", h.FindGoods)
-	e.POST("/goods", h.CreateGoods)
-	e.PUT("/goods/:id", h.EditGoods)
+
+	apiRoute := e.Group("/api")
+
+	apiV1 := apiRoute.Group("/v1")
+	apiV1.GET("/goods", h.FindGoods)
+	apiV1.POST("/goods", h.CreateGoods)
+	apiV1.PUT("/goods/:id", h.EditGoods)
 
 	e.Logger.Fatal(e.Start(":5000"))
 }
