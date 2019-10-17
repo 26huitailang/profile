@@ -30,7 +30,7 @@ func TestGoodsManger_GetAllGoods(t *testing.T) {
 			defer removeTestDB(t, TestDBName)
 			db, closeDB := database.NewDB(TestDBName)
 			defer closeDB()
-			db.AutoMigrate(&Goods{}, &GoodsProfile{}, &GoodsImage{})
+			db.AutoMigrate(&Goods{}, &GoodsImage{})
 			m := &GoodsManger{
 				db: db,
 			}
