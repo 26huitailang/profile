@@ -1,0 +1,102 @@
+basePath: /api/v1
+definitions:
+  model.Goods:
+    properties:
+      buyAt:
+        type: string
+      category:
+        type: integer
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      depreciationRate:
+        description: percent per day
+        type: number
+      description:
+        type: string
+      expireAt:
+        type: string
+      id:
+        type: integer
+      images:
+        items:
+          $ref: '#/definitions/model.GoodsImage'
+        type: array
+      name:
+        type: string
+      price:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  model.GoodsImage:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      goodsID:
+        type: integer
+      id:
+        type: integer
+      path:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+host: localhost:5000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server Petstore server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /goods:
+    get:
+      operationId: get-all-goods
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Token:
+              description: qwerty
+              type: string
+          schema:
+            $ref: '#/definitions/model.Goods'
+      summary: All goods
+      tags:
+      - goods
+    post:
+      consumes:
+      - application/json
+      description: create new one
+      operationId: create-one-goods
+      parameters:
+      - description: add model.Goods
+        in: body
+        name: name
+        required: true
+        schema:
+          $ref: '#/definitions/model.Goods'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Goods'
+      summary: Create one new item
+      tags:
+      - goods
+swagger: "2.0"
