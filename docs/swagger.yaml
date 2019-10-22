@@ -14,6 +14,7 @@ definitions:
         description: percent per day
         type: number
       description:
+        example: description
         type: string
       expireAt:
         type: string
@@ -24,8 +25,10 @@ definitions:
           $ref: '#/definitions/model.GoodsImage'
         type: array
       name:
+        example: item name
         type: string
       price:
+        example: 9
         type: integer
       updatedAt:
         type: string

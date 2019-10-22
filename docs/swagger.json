@@ -100,7 +100,8 @@
                     "type": "number"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "description"
                 },
                 "expireAt": {
                     "type": "string"
@@ -115,10 +116,12 @@
                     }
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "item name"
                 },
                 "price": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 9
                 },
                 "updatedAt": {
                     "type": "string"

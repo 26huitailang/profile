@@ -14,17 +14,17 @@ const (
 )
 
 type CustomModel struct {
-	ID        uint       `json:"id";gorm:"primary_key"`
+	ID        uint       `json:"id" gorm:"primary_key"`
 	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt"`
-	DeletedAt *time.Time `json:"deletedAt";sql:"index"`
+	DeletedAt *time.Time `json:"deletedAt" sql:"index"`
 }
 
 type Goods struct {
 	CustomModel
-	Name             string       `json:"name" gorm:"not null;unique"`
-	Description      string       `json:"description"`
-	Price            uint         `json:"price"`
+	Name             string       `json:"name" gorm:"not null;unique" example:"item name"`
+	Description      string       `json:"description" example:"description"`
+	Price            uint         `json:"price" example:"9"`
 	Category         uint         `json:"category"`
 	Images           []GoodsImage `json:"images"`
 	BuyAt            time.Time    `json:"buyAt"`
