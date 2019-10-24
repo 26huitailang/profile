@@ -102,4 +102,19 @@ paths:
       summary: Create one new item
       tags:
       - goods
+    put:
+      consumes:
+      - application/json
+      description: PUT method to update
+      operationId: edit-goods
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Goods'
+      summary: EditGoods PUT to update goods
+      tags:
+      - goods
 swagger: "2.0"

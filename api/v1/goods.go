@@ -51,7 +51,16 @@ func (h *ViewHandler) CreateGoods(c echo.Context) error {
 	return c.JSON(http.StatusCreated, api.ResponseV1("", item))
 }
 
-// EditGoods PUT to update goods in db
+// @Summary EditGoods PUT to update goods in db
+// @Summary EditGoods PUT to update goods
+// @Tags goods
+// @Description PUT method to update
+// @ID edit-goods
+// @Accept json
+// @Produce json
+// @Header 200 {string} Token "qwerty"
+// @Success 200 {object} model.Goods
+// @Router /goods [put]
 func (h *ViewHandler) EditGoods(c echo.Context) error {
 	item := new(model.Goods)
 	if err := c.Bind(item); err != nil {

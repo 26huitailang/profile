@@ -18,6 +18,6 @@ require (
 	github.com/urfave/cli v1.22.1 // indirect
 	golang.org/x/crypto v0.0.0-20190923035154-9ee001bba392 // indirect
 	golang.org/x/net v0.0.0-20191021144547-ec77196f6094 // indirect
-	golang.org/x/tools v0.0.0-20191022074931-774d2ec196ee // indirect
+	golang.org/x/tools v0.0.0-20191023202404-2b779830f9d3 // indirect
 	gopkg.in/yaml.v2 v2.2.4 // indirect
 )

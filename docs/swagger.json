@@ -43,6 +43,28 @@
                     }
                 }
             },
+            "put": {
+                "description": "PUT method to update",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "goods"
+                ],
+                "summary": "EditGoods PUT to update goods",
+                "operationId": "edit-goods",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Goods"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "create new one",
                 "consumes": [
