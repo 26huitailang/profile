@@ -5,6 +5,7 @@ import (
 	"github.com/swaggo/echo-swagger"
 	"net/http"
 	v1 "profile/api/v1"
+	"profile/core"
 	"profile/database"
 	"profile/model"
 
@@ -40,13 +41,25 @@ func main() {
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodOptions, http.MethodDelete},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 	}))
+
+	e.Use(func(handlerFunc echo.HandlerFunc) echo.HandlerFunc {
+		return func(context echo.Context) error {
+			cc := &core.CustomContext{context}
+			return handlerFunc(cc)
+		}
+	})
+
 	store := model.NewGoodsManager(db)
 	h := v1.NewViewHandler(store)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.GET("/profiles/:username", h.Profiles)
+	e.POST("/login", h.Login)
+	e.GET("/check-login", h.CheckLogin)
 
 	apiRoute := e.Group("/api")
+	// basic auth
+	apiRoute.Use(middleware.JWT([]byte("secret-super-passwd")))
 
 	apiV1 := apiRoute.Group("/v1")
 	{

@@ -1,24 +1,9 @@
 package v1
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo/v4"
+	"net/http"
 )
-
-type Store interface {
-	GoodsManager
-}
-
-type ViewHandler struct {
-	store Store
-}
-
-func NewViewHandler(store Store) *ViewHandler {
-	return &ViewHandler{
-		store: store,
-	}
-}
 
 func (h *ViewHandler) Profiles(c echo.Context) error {
 	username := c.Param("username")

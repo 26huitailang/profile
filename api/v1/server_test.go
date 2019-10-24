@@ -6,7 +6,7 @@ import (
 	v1 "profile/api/v1"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
 
