@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"profile/auth"
 	"profile/core"
+	"time"
 )
 
 func (h *ViewHandler) Login(c echo.Context) error {
@@ -16,7 +17,7 @@ func (h *ViewHandler) Login(c echo.Context) error {
 		return echo.ErrUnauthorized
 	}
 
-	t, err := auth.GenJWT("admin", true, []byte("secret-super-passwd"))
+	t, err := auth.GenJWT("admin", true, []byte("secret-super-passwd"), time.Hour*6)
 	if err != nil {
 		return err
 	}

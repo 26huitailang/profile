@@ -5,6 +5,7 @@ import (
 	"github.com/swaggo/echo-swagger"
 	"net/http"
 	v1 "profile/api/v1"
+	"profile/auth"
 	"profile/core"
 	"profile/database"
 	"profile/model"
@@ -55,11 +56,14 @@ func main() {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.GET("/profiles/:username", h.Profiles)
 	e.POST("/login", h.Login)
-	e.GET("/check-login", h.CheckLogin)
 
 	apiRoute := e.Group("/api")
 	// basic auth
-	apiRoute.Use(middleware.JWT([]byte("secret-super-passwd")))
+	apiRoute.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+		SigningKey: []byte("secret-super-passwd"),
+		Claims:     &auth.JwtCustomClaims{},
+	}))
+	apiRoute.GET("/check-login", h.CheckLogin)
 
 	apiV1 := apiRoute.Group("/v1")
 	{

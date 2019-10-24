@@ -13,21 +13,23 @@ type JwtCustomClaims struct {
 	jwt.StandardClaims
 }
 
-func GetUserInfo(c echo.Context) JwtCustomClaims {
+func GetUserInfo(c echo.Context) *JwtCustomClaims {
 	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(JwtCustomClaims)
+	claims := user.Claims.(*JwtCustomClaims)
+	println(claims.Name)
+	println(claims.Admin)
 
 	return claims
 }
 
-func GenJWT(name string, isAdmin bool, key []byte) (string, error) {
+func GenJWT(name string, isAdmin bool, key []byte, exp time.Duration) (string, error) {
 
 	// Set claims
 	claims := &JwtCustomClaims{
-		Name:  name,
-		Admin: isAdmin,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 6).Unix(),
+		name,
+		isAdmin,
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(exp).Unix(),
 		},
 	}
 	// Create token
