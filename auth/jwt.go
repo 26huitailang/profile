@@ -1,8 +1,8 @@
 package auth
 
 import (
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/labstack/echo/v4"
 	"time"
 )
 
@@ -13,14 +13,6 @@ type JwtCustomClaims struct {
 	jwt.StandardClaims
 }
 
-func GetUserInfo(c echo.Context) *JwtCustomClaims {
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*JwtCustomClaims)
-	println(claims.Name)
-	println(claims.Admin)
-
-	return claims
-}
 
 func GenJWT(name string, isAdmin bool, key []byte, exp time.Duration) (string, error) {
 
@@ -39,4 +31,21 @@ func GenJWT(name string, isAdmin bool, key []byte, exp time.Duration) (string, e
 	t, err := token.SignedString(key)
 
 	return t, err
+}
+
+func ParseToken(tokenString string, key []byte) (*jwt.Token, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &JwtCustomClaims{}, func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("method not right, should be %v", t.Method)
+		}
+		return key, nil
+	})
+	return token, err
+}
+
+func ParseClaims(token *jwt.Token) *JwtCustomClaims {
+	if claims, ok := token.Claims.(*JwtCustomClaims); ok && token.Valid {
+		return claims
+	}
+	return nil
 }
