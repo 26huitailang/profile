@@ -6,3 +6,6 @@ run:
 swag:
 	swag init
 rebuild-swag-run: swag run
+
+test:
+	go test -v -cover ./...

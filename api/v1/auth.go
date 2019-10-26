@@ -28,6 +28,6 @@ func (h *ViewHandler) Login(c echo.Context) error {
 }
 
 func (h *ViewHandler) CheckLogin(c echo.Context) error {
-	claims := auth.GetUserInfo(c)
+	claims := c.(*core.CustomContext).GetUser()
 	return c.JSON(http.StatusOK, claims)
 }
