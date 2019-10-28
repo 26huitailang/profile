@@ -21,17 +21,19 @@ func NewEchoApp(h *v1.ViewHandler) *echo.Echo {
 	}))
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.GET("/profiles/:username", h.Profiles)
-	e.POST("/login", h.Login)
+	e.POST("/user/login", h.Login)
 
-	apiRoute := e.Group("/api")
+	apiAuthRoute := e.Group("")
+
 	// basic auth
-	apiRoute.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+	apiAuthRoute.Use(middleware.JWTWithConfig(middleware.JWTConfig{
 		SigningKey: []byte("secret-super-passwd"),
 		Claims:     &auth.JwtCustomClaims{},
 	}))
-	apiRoute.GET("/check-login", h.CheckLogin)
+	apiAuthRoute.GET("/user/info", h.UserInfo)
+	apiAuthRoute.POST("/user/logout", h.Logout)
 
-	apiV1 := apiRoute.Group("/v1")
+	apiV1 := apiAuthRoute.Group("/api/v1")
 	{
 		apiV1.GET("/goods", h.FindGoods)
 		apiV1.POST("/goods", h.CreateGoods)

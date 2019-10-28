@@ -27,7 +27,13 @@ func (h *ViewHandler) Login(c echo.Context) error {
 	})
 }
 
-func (h *ViewHandler) CheckLogin(c echo.Context) error {
+func (h *ViewHandler) UserInfo(c echo.Context) error {
 	claims := c.(*core.CustomContext).GetUser()
 	return c.JSON(http.StatusOK, claims)
 }
+
+func (h *ViewHandler) Logout(c echo.Context) error {
+	println("user logout")
+	return c.JSON(http.StatusOK, echo.Map{})
+}
+
