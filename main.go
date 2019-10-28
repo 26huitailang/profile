@@ -3,6 +3,7 @@ package main
 import (
 	v1 "profile/api/v1"
 	"profile/app"
+	"profile/config"
 	"profile/database"
 	"profile/model"
 
@@ -25,7 +26,8 @@ import (
 // @host localhost:5000
 // @BasePath /api/v1
 func main() {
-	db, closeDB := database.NewDB("prod.db")
+	// conifg
+	db, closeDB := database.NewDB(config.Cfg.DB.Name)
 	defer closeDB()
 
 	// 自动迁移模式
@@ -35,5 +37,5 @@ func main() {
 	h := v1.NewViewHandler(store)
 
 	e := app.NewEchoApp(h)
-	e.Logger.Fatal(e.Start(":5000"))
+	e.Logger.Fatal(e.Start(config.GetString("server.port")))
 }

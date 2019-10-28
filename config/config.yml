@@ -1,0 +1,5 @@
+level: 3  # test/debug/dev/prod
+db:
+  name: "prod.db"
+server:
+  port: ":5000"
