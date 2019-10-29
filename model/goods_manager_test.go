@@ -10,8 +10,8 @@ const TestDBName = "test.db"
 
 func TestGoodsManger_GetAllGoods(t *testing.T) {
 
-	itemPhone := Goods{Name: "phone", Description: "desc1", Price: 9, Category: uint(Electronics)}
-	itemTV := Goods{Name: "tv", Description: "desc1", Price: 19, Category: uint(Electronics)}
+	itemPhone := Goods{Name: "phone", Description: "desc1", Price: 9, Category: uint(ElectronicEquipment)}
+	itemTV := Goods{Name: "tv", Description: "desc1", Price: 19, Category: uint(HouseholdAppliances)}
 
 	tests := []struct {
 		name string

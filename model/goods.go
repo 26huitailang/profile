@@ -9,8 +9,9 @@ import (
 type GoodsCategory uint
 
 const (
-	Others GoodsCategory = iota // 0
-	Electronics
+	Others              GoodsCategory = iota // 0
+	ElectronicEquipment                      // 1
+	HouseholdAppliances                      // 2
 )
 
 type CustomModel struct {
