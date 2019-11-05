@@ -3,7 +3,8 @@ version: '3'
 services:
   web:
     build: .
-    command: make run
+    working_dir: /code
+    command: go run main.go
     volumes:
       - .:/code
     ports:
