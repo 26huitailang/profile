@@ -13,7 +13,7 @@ require (
 	github.com/labstack/echo v3.3.10+incompatible // indirect
 	github.com/labstack/echo/v4 v4.0.0
 	github.com/labstack/gommon v0.3.0 // indirect
-	github.com/magiconair/properties v1.8.1 // indirect
+	github.com/magiconair/properties v1.8.1
 	github.com/mailru/easyjson v0.7.0 // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
@@ -33,4 +33,5 @@ require (
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
 	golang.org/x/sys v0.0.0-20191027211539-f8518d3b3627 // indirect
 	golang.org/x/tools v0.0.0-20191023202404-2b779830f9d3 // indirect
+	google.golang.org/appengine v1.6.5 // indirect
 )

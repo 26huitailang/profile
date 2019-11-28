@@ -6,12 +6,10 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
-type GoodsCategory uint
-
 const (
-	Others              GoodsCategory = iota // 0
-	ElectronicEquipment                      // 1
-	HouseholdAppliances                      // 2
+	Others              uint = iota // 0
+	ElectronicEquipment             // 1
+	HouseholdAppliances             // 2
 )
 
 type CustomModel struct {
