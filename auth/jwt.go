@@ -8,19 +8,23 @@ import (
 
 // JwtCustomClaims are custom claims extending default ones.
 type JwtCustomClaims struct {
-	Name  string `json:"name"`
-	Admin bool   `json:"admin"`
+	Name         string   `json:"name"`
+	Roles        []string `json:"roles"`
+	Introduction string   `json:"introduction"`
+	Avatar       string   `json:"avatar"`
+	Code         int      `json:"code"`
 	jwt.StandardClaims
 }
-
 
 func GenJWT(name string, isAdmin bool, key []byte, exp time.Duration) (string, error) {
 
 	// Set claims
 	claims := &JwtCustomClaims{
-		name,
-		isAdmin,
-		jwt.StandardClaims{
+		Name:         name,
+		Roles:        []string{"admin"},
+		Introduction: "I am a super administrator",
+		Avatar:       "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
+		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(exp).Unix(),
 		},
 	}

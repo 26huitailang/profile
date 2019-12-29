@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	v1 "profile/api/v1"
 	"profile/app"
 	"profile/config"
@@ -27,13 +28,14 @@ import (
 // @BasePath /api/v1
 func main() {
 	// conifg
-	db, closeDB := database.NewDB(config.Cfg.DB.Name)
-	defer closeDB()
-
+	client, err := database.NewMongo("root", "123123", database.MongoHost, database.MongoDB)
+	if err != nil {
+		log.Fatalf("DB connect error: %s", err)
+	}
 	// 自动迁移模式
-	db.AutoMigrate(&model.Goods{}, &model.GoodsImage{})
+	//db.AutoMigrate(&model.Goods{}, &model.GoodsImage{})
 
-	store := model.NewGoodsManager(db)
+	store := model.NewDeviceManager(client)
 	h := v1.NewViewHandler(store)
 
 	e := app.NewEchoApp(h)

@@ -11,7 +11,7 @@ const MongoTestDB = "mock"
 
 func TestAssetManger_InsertOne(t *testing.T) {
 	_id := primitive.NewObjectID()
-	item1 := Asset{ID: _id, Name: "0", Description: "a", Price: 99, Category: ElectronicEquipment}
+	item1 := Device{ID: _id, Name: "0", Description: "a", Price: 99, Category: ElectronicEquipment}
 	testCases := []struct {
 		name string
 		data interface{}
@@ -26,7 +26,7 @@ func TestAssetManger_InsertOne(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			manager := NewAssetManager(client)
+			manager := NewDeviceManager(client)
 			defer helperDropCollection(manager)
 
 			insertResult, err := manager.InsertOne(&item1)
@@ -38,6 +38,6 @@ func TestAssetManger_InsertOne(t *testing.T) {
 	}
 }
 
-func helperDropCollection(m *AssetManger) {
+func helperDropCollection(m *DeviceManger) {
 	m.DropCollection()
 }

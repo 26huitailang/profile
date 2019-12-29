@@ -39,7 +39,7 @@ func NewMongo(username, password, host, db string) (*mongo.Client, error) {
 }
 
 func GenMongoURI(username, password, host, db string) string {
-	uri := fmt.Sprintf("mongodb://%s:%s@%s/%s", username, password, host, db)
+	uri := fmt.Sprintf("mongodb://%s:%s@%s/%s?authSource=admin", username, password, host, db)
 	return uri
 }
 

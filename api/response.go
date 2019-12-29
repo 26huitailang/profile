@@ -5,15 +5,25 @@ import (
 	"io"
 )
 
+const (
+	CodeSuccess = 20000
+	// 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
+	CodeIllegalToken         = 50008
+	CodeOtherClientsLoggedIn = 50012
+	CodeTokenExpired         = 50014
+)
+
 type CustomResponse struct {
-	Data interface{} `json:"data"`
-	Info string      `json:"info"`
+	Code    int         `json:"code"`
+	Data    interface{} `json:"data"`
+	Message string      `json:"message"`
 }
 
-func ResponseV1(info string, data interface{}) CustomResponse {
+func ResponseV1(code int, info string, data interface{}) CustomResponse {
 	msg := CustomResponse{
-		Info: info,
-		Data: data,
+		Code:    code,
+		Message: info,
+		Data:    data,
 	}
 	return msg
 }

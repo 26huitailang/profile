@@ -5,7 +5,7 @@ type ViewHandler struct {
 }
 
 type Store interface {
-	GoodsManager
+	IDeviceManager
 }
 
 func NewViewHandler(store Store) *ViewHandler {

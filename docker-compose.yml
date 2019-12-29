@@ -3,9 +3,23 @@ version: '3'
 services:
   web:
     build: .
+    container_name: profile_web
     working_dir: /code
     command: go run main.go
     volumes:
       - .:/code
     ports:
       - "5000:5000"
+  db:
+    image: mongo
+    container_name: profile_mongo
+    restart: always
+    volumes:
+      - "./data/db:/data/db"
+      - "./data/log:/data/log"
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123123
+    command: --dbpath /data/db --logpath /data/log/dblog.log --auth

@@ -11,13 +11,13 @@ import (
 )
 
 func NewEchoApp(h *v1.ViewHandler) *echo.Echo {
-
 	e := echo.New()
+	e.Debug = true
 	ConfigCustomContext(e)
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodOptions, http.MethodDelete},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization, "X-Token"},
 	}))
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.GET("/profiles/:username", h.Profiles)
@@ -25,19 +25,20 @@ func NewEchoApp(h *v1.ViewHandler) *echo.Echo {
 
 	apiAuthRoute := e.Group("")
 
-	// basic auth
+	// jwt auth
 	apiAuthRoute.Use(middleware.JWTWithConfig(middleware.JWTConfig{
-		SigningKey: []byte("secret-super-passwd"),
-		Claims:     &auth.JwtCustomClaims{},
+		SigningKey:  []byte("secret-super-passwd"),
+		Claims:      &auth.JwtCustomClaims{},
+		TokenLookup: "header:Authorization",
 	}))
 	apiAuthRoute.GET("/user/info", h.UserInfo)
 	apiAuthRoute.POST("/user/logout", h.Logout)
 
 	apiV1 := apiAuthRoute.Group("/api/v1")
 	{
-		apiV1.GET("/goods", h.FindGoods)
-		apiV1.POST("/goods", h.CreateGoods)
-		apiV1.PUT("/goods/:id", h.EditGoods)
+		apiV1.GET("/devices", h.FindDevices)
+		apiV1.POST("/device", h.CreateDevice)
+		apiV1.PUT("/devices/:id", h.EditGoods)
 	}
 	return e
 }

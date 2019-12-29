@@ -11,11 +11,12 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# db
-*.db
-
 # idea
 .idea/
 /main
 
 vendor/
+
+# data
+data/
+*.db
