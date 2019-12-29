@@ -43,7 +43,7 @@ func TestViewHandler_FindGoods(t *testing.T) {
 			insertGoods(t, store, tt.goods)
 
 			c := e.NewContext(request, response)
-			h.FindGoods(c)
+			h.FindDevices(c)
 
 			got := api.DecodeResponseV1(response.Body)
 			fmt.Sprintf("%v", got)
@@ -75,7 +75,7 @@ func TestViewHandler_CreateGoods(t *testing.T) {
 			h := v1.NewViewHandler(store)
 
 			c := e.NewContext(request, response)
-			h.CreateGoods(c)
+			h.CreateDevice(c)
 
 			got := api.DecodeResponseV1(response.Body)
 			assert.Equal(t, http.StatusCreated, response.Code)
