@@ -1,0 +1,10 @@
+POST http://{{host}}/api/v1/device
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "tv",
+  "buyAt": "2019-10-10"
+}
+
+###

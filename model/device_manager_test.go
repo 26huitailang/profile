@@ -1,13 +1,13 @@
 package model
 
 import (
-	"github.com/magiconair/properties/assert"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"profile/database"
 	"testing"
 )
 
-const MongoTestDB = "mock"
+const MongoTestDB = "test"
 
 func TestAssetManger_InsertOne(t *testing.T) {
 	_id := primitive.NewObjectID()
@@ -27,7 +27,7 @@ func TestAssetManger_InsertOne(t *testing.T) {
 				t.Fatal(err)
 			}
 			manager := NewDeviceManager(client)
-			defer helperDropCollection(manager)
+			//defer helperDropCollection(manager)
 
 			insertResult, err := manager.InsertOne(&item1)
 			if err != nil {

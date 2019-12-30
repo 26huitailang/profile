@@ -25,9 +25,9 @@ func NewDB(filename string) (*gorm.DB, func()) {
 }
 
 const (
-	MongoUsername string = "test"
-	MongoPassword string = "123456"
-	MongoHost     string = "localhost:27017"
+	MongoUsername string = "develop"
+	MongoPassword string = "develop"
+	MongoHost     string = "10.200.233.224:27017"
 	MongoDB       string = "develop"
 )
 
@@ -39,7 +39,7 @@ func NewMongo(username, password, host, db string) (*mongo.Client, error) {
 }
 
 func GenMongoURI(username, password, host, db string) string {
-	uri := fmt.Sprintf("mongodb://%s:%s@%s/%s?authSource=admin", username, password, host, db)
+	uri := fmt.Sprintf("mongodb://%s:%s@%s/%s?authSource=develop", username, password, host, db)
 	return uri
 }
 

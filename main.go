@@ -28,7 +28,7 @@ import (
 // @BasePath /api/v1
 func main() {
 	// conifg
-	client, err := database.NewMongo("root", "123123", database.MongoHost, database.MongoDB)
+	client, err := database.NewMongo("develop", "develop", database.MongoHost, database.MongoDB)
 	if err != nil {
 		log.Fatalf("DB connect error: %s", err)
 	}

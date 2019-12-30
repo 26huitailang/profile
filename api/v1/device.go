@@ -1,18 +1,19 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"profile/api"
 	"profile/model"
-	"strconv"
 )
 
 type IDeviceManager interface {
 	InsertOneDevice(item *model.Device) (*model.Device, error)
 	GetAllDevices() []*model.Device
 	UpdateOneDevice(item *model.Device) (*model.Device, error)
-	GetOneDevice(id uint) (*model.Device, error)
+	GetOneDevice(id primitive.ObjectID) (*model.Device, error)
 }
 
 // FindDevices GET to query goods records in db
@@ -41,6 +42,7 @@ func (h *ViewHandler) FindDevices(c echo.Context) error {
 // @Router /goods [post]
 func (h *ViewHandler) CreateDevice(c echo.Context) error {
 	item := new(model.Device)
+	fmt.Printf("%v", c.Request())
 	if err := c.Bind(item); err != nil {
 		return err
 	}
@@ -66,8 +68,8 @@ func (h *ViewHandler) EditGoods(c echo.Context) error {
 	if err := c.Bind(item); err != nil {
 		return err
 	}
-	itemID, _ := strconv.Atoi(c.Param("id"))
-	itemModel, err := h.store.GetOneDevice(uint(itemID))
+	itemID, _ := primitive.ObjectIDFromHex(c.Param("id"))
+	itemModel, err := h.store.GetOneDevice(itemID)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, api.ResponseV1(api.CodeSuccess, err.Error(), itemModel))
 	}

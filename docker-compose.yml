@@ -10,16 +10,16 @@ services:
       - .:/code
     ports:
       - "5000:5000"
-  db:
-    image: mongo
-    container_name: profile_mongo
-    restart: always
-    volumes:
-      - "./data/db:/data/db"
-      - "./data/log:/data/log"
+  mongo:
+    image: mongo:4.2
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 123123
-    command: --dbpath /data/db --logpath /data/log/dblog.log --auth
+    volumes:
+      - "./data/mongo:/data/db"
+      - "./mongo-entrypoint/:/docker-entrypoint-initdb.d/"
+      - "./data/log:/data/log"
+

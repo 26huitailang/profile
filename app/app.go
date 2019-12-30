@@ -13,7 +13,7 @@ import (
 func NewEchoApp(h *v1.ViewHandler) *echo.Echo {
 	e := echo.New()
 	e.Debug = true
-	ConfigCustomContext(e)
+	//ConfigCustomContext(e)
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodOptions, http.MethodDelete},

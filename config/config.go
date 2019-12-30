@@ -9,10 +9,10 @@ import (
 )
 
 const (
-	LevelTest    = iota // 0
-	LevelDebug          // 1
-	LevelDevelop        // 2
-	LevelProduct        // 3
+	LevelTest    = "test"
+	LevelDebug   = "debug"
+	LevelDevelop = "develop"
+	LevelProduct = "product"
 )
 
 const (
@@ -25,11 +25,17 @@ const (
 type DB struct {
 	Name string `mapstructure:"name"`
 }
+type Mongo struct {
+	Username string `mapstructure:"username"`
+	Password string `mapstructure:"password"`
+	Host     string `mapstructure:"host"`
+	DB       string `mapstructure:"db"`
+}
 type Server struct {
 	Port string `mapstructure:"port"`
 }
 type Config struct {
-	Level  int
+	Level  string
 	DB     `mapstructure:"db"`
 	Server `mapstructure:"server"`
 }
@@ -54,7 +60,7 @@ func init() {
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
 
-	overrideConfig(viper.GetInt("level"))
+	overrideConfig(viper.GetString("level"))
 
 	err = viper.Unmarshal(&Cfg)
 	if err != nil {
@@ -75,7 +81,7 @@ func Sub(key string) *viper.Viper {
 	return viper.Sub(key)
 }
 
-func overrideConfig(level int) {
+func overrideConfig(level string) {
 	switch level {
 	case LevelTest:
 		viper.Set("db.name", DBNameTest)
@@ -93,7 +99,7 @@ func overrideConfig(level int) {
 }
 
 func parseFlag() {
-	pflag.Int("level", LevelDevelop, "env level, default 2, [0-3]")
+	pflag.String("level", LevelDevelop, "env level, default develop, [test/debug/develop/product]")
 	pflag.String("server.port", Port, "server port, default :5000")
 	pflag.Parse()
 	viper.BindPFlags(pflag.CommandLine)
