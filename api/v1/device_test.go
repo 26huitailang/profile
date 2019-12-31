@@ -13,7 +13,6 @@ import (
 	v1 "profile/api/v1"
 	"profile/app"
 	"profile/model"
-	"reflect"
 	"testing"
 	"time"
 )
@@ -58,19 +57,25 @@ func TestViewHandler_FindDevices(t *testing.T) {
 func TestViewHandler_CreateDevice(t *testing.T) {
 	e := echo.New()
 
+	type reqBody struct {
+		Name     string `json:"name"`
+		Category uint   `json:"category"`
+		BuyAt    string `json:"buyAt"`
+		Price    uint   `json:"price"`
+	}
+	device := &model.Device{Name: "tv", Category: model.CategoryElectronicEquipment, Price: 9, BuyAt: model.Timestamp(time.Date(2019, 10, 12, 0, 0, 0, 0, time.UTC))}
+
 	cases := []struct {
-		name   string
-		device *model.Device
-		want   *model.Device
+		name string
+		body reqBody
+		want *model.Device
 	}{
-		{name: "create one device", device: DevicePhone, want: DevicePhone},
+		{name: "create one device", body: reqBody{Name: "tv", Category: model.CategoryElectronicEquipment, BuyAt: "2019-10-12", Price: 9}, want: device},
 	}
 
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
-			//jsonBytes, _ := json.Marshal(tt.device)
-			jsonBytes := []byte(`"{"name": }"`)
-			t.Logf("data: %v", tt.device)
+			jsonBytes, _ := json.Marshal(tt.body)
 			request := httptest.NewRequest(echo.POST, "/api/v1/device", bytes.NewReader(jsonBytes))
 			request.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			response := httptest.NewRecorder()
@@ -78,14 +83,12 @@ func TestViewHandler_CreateDevice(t *testing.T) {
 			h := v1.NewViewHandler(store)
 
 			c := e.NewContext(request, response)
-			t.Log("jojoj", response.Code)
 			h.CreateDevice(c)
 
 			got := api.DecodeResponseV1(response.Body)
 			assert.Equal(t, http.StatusCreated, response.Code)
 			assert.Equal(t, "", got.Message)
-			fmt.Printf("got: %v", got.Data)
-			reflect.DeepEqual(tt.want, got.Data)
+			assert.Equal(t, "tv", got.Data.(map[string]interface{})["name"])
 		})
 	}
 }
@@ -137,6 +140,7 @@ func (s *StubDeviceManager) GetOneDevice(id primitive.ObjectID) (*model.Device, 
 }
 
 func (s *StubDeviceManager) InsertOneDevice(item *model.Device) (*model.Device, error) {
+	item.ID = primitive.NewObjectID()
 	s.Devices = append(s.Devices, item)
 	return item, nil
 }

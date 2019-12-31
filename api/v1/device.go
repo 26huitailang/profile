@@ -40,8 +40,8 @@ func (h *ViewHandler) FindDevices(c echo.Context) error {
 // @Success 200 {object} model.Device
 // @Router /device [post]
 func (h *ViewHandler) CreateDevice(c echo.Context) error {
-	item := new(model.Device)
-	if err := c.Bind(item); err != nil {
+	item := model.NewDevice()
+	if err := c.Bind(&item); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	item, err := h.store.InsertOneDevice(item)

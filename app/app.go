@@ -1,10 +1,12 @@
 package app
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"net/http"
+	"os"
 	v1 "profile/api/v1"
 	"profile/auth"
 	"profile/core"
@@ -14,6 +16,12 @@ func NewEchoApp(h *v1.ViewHandler) *echo.Echo {
 	e := echo.New()
 	e.Debug = true
 	ConfigCustomContext(e)
+	if e.Debug {
+		e.Use(middleware.BodyDump(func(context echo.Context, req []byte, res []byte) {
+			fmt.Fprintf(os.Stderr, "Request: %v\n", string(req))
+		}))
+		e.Use(middleware.Logger())
+	}
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodOptions, http.MethodDelete},

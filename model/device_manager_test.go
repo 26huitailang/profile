@@ -11,7 +11,7 @@ const MongoTestDB = "test"
 
 func TestAssetManger_InsertOne(t *testing.T) {
 	_id := primitive.NewObjectID()
-	item1 := Device{ID: _id, Name: "0", Description: "a", Price: 99, Category: ElectronicEquipment}
+	item1 := Device{ID: _id, Name: "0", Description: "a", Price: 99, Category: CategoryElectronicEquipment}
 	testCases := []struct {
 		name string
 		data interface{}
