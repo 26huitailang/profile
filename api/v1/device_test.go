@@ -68,14 +68,17 @@ func TestViewHandler_CreateDevice(t *testing.T) {
 
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
-			jsonBytes, _ := json.Marshal(tt.device)
-			request := httptest.NewRequest(echo.POST, "/api/v2/device", bytes.NewReader(jsonBytes))
+			//jsonBytes, _ := json.Marshal(tt.device)
+			jsonBytes := []byte(`"{"name": }"`)
+			t.Logf("data: %v", tt.device)
+			request := httptest.NewRequest(echo.POST, "/api/v1/device", bytes.NewReader(jsonBytes))
 			request.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			response := httptest.NewRecorder()
 			store := &StubDeviceManager{}
 			h := v1.NewViewHandler(store)
 
 			c := e.NewContext(request, response)
+			t.Log("jojoj", response.Code)
 			h.CreateDevice(c)
 
 			got := api.DecodeResponseV1(response.Body)

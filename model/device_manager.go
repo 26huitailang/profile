@@ -3,6 +3,7 @@ package model
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -86,7 +87,6 @@ func (m *DeviceManger) DropCollection() {
 }
 
 // implement interface
-
 func (m *DeviceManger) InsertOneDevice(item *Device) (*Device, error) {
 	ret, err := m.InsertOne(item)
 	if err != nil {
@@ -103,6 +103,6 @@ func (m *DeviceManger) UpdateOneDevice(item *Device) (*Device, error) {
 	panic("implement me")
 }
 
-func (m *DeviceManger) GetOneDevice(id uint) (*Device, error) {
+func (m *DeviceManger) GetOneDevice(id primitive.ObjectID) (*Device, error) {
 	panic("implement me")
 }

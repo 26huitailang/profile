@@ -13,7 +13,7 @@ import (
 func NewEchoApp(h *v1.ViewHandler) *echo.Echo {
 	e := echo.New()
 	e.Debug = true
-	//ConfigCustomContext(e)
+	ConfigCustomContext(e)
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodOptions, http.MethodDelete},
@@ -38,7 +38,7 @@ func NewEchoApp(h *v1.ViewHandler) *echo.Echo {
 	{
 		apiV1.GET("/devices", h.FindDevices)
 		apiV1.POST("/device", h.CreateDevice)
-		apiV1.PUT("/devices/:id", h.EditGoods)
+		apiV1.PUT("/devices/:id", h.EditDevice)
 	}
 	return e
 }

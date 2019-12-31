@@ -8,7 +8,6 @@ import (
 	"profile/database"
 	"profile/model"
 
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	_ "profile/docs"
 )
 

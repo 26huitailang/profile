@@ -20,7 +20,7 @@ type IDeviceManager interface {
 // @Summary All goods
 // @ID get-all-goods
 // @Produce  json
-// @Success 200 {object} model.Goods[]
+// @Success 200 {object} model.Device[]
 // @Header 200 {string} Token "qwerty"
 // @Router /goods [get]
 func (h *ViewHandler) FindDevices(c echo.Context) error {
@@ -35,14 +35,14 @@ func (h *ViewHandler) FindDevices(c echo.Context) error {
 // @ID create-one-goods
 // @Accept json
 // @Produce json
-// @Param name body model.Goods true "add model.Goods"
-// @Header 200 {string} Token "qwerty"
-// @Success 200 {object} model.Goods
-// @Router /goods [post]
+// @Param device body model.Device true "add model.Device"
+// @Header 200 {string} Authorization "Bearer qwerty"
+// @Success 200 {object} model.Device
+// @Router /device [post]
 func (h *ViewHandler) CreateDevice(c echo.Context) error {
 	item := new(model.Device)
 	if err := c.Bind(item); err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, err)
 	}
 	item, err := h.store.InsertOneDevice(item)
 	if err != nil {
@@ -51,17 +51,17 @@ func (h *ViewHandler) CreateDevice(c echo.Context) error {
 	return c.JSON(http.StatusCreated, api.ResponseV1(api.CodeSuccess, "", item))
 }
 
-// @Summary EditGoods PUT to update goods in db
-// @Summary EditGoods PUT to update goods
+// @Summary EditDevice PUT to update goods in db
+// @Summary EditDevice PUT to update goods
 // @Tags goods
 // @Description PUT method to update
 // @ID edit-goods
 // @Accept json
 // @Produce json
 // @Header 200 {string} Token "qwerty"
-// @Success 200 {object} model.Goods
+// @Success 200 {object} model.Device
 // @Router /goods [put]
-func (h *ViewHandler) EditGoods(c echo.Context) error {
+func (h *ViewHandler) EditDevice(c echo.Context) error {
 	item := new(model.Device)
 	if err := c.Bind(item); err != nil {
 		return err

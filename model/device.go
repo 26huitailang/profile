@@ -18,10 +18,10 @@ type BaseModelWithTime struct {
 type Device struct {
 	BaseModelWithTime `bson:",inline"`
 	ID                primitive.ObjectID `bson:"_id"`
-	Name              string             `json:"name" bson:"name"`
+	Name              string             `json:"name" bson:"name" validate:"required"`
 	Description       string             `bson:"description"`
-	Price             uint               `bson:"price"`
-	Category          uint               `bson:"category"`
+	Price             uint               `bson:"price" example:"9.9"`
+	Category          uint               `bson:"category" enums:"0,1,2" example:"1" validate:"required"`
 	Images            []Image            `bson:"images"`
 	BuyAt             Timestamp          `json:"buyAt" bson:"buyAt"`
 	ExpiredAt         Timestamp          `bson:"expiredAt"`
