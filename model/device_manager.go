@@ -7,7 +7,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
-	"profile/database"
 )
 
 type DeviceManger struct {
@@ -16,11 +15,11 @@ type DeviceManger struct {
 	db         *mongo.Database
 }
 
-func NewDeviceManager(client *mongo.Client) *DeviceManger {
+func NewDeviceManager(client *mongo.Client, db string) *DeviceManger {
 	return &DeviceManger{
 		client:     client,
-		db:         client.Database(database.MongoDB),
-		collection: client.Database(database.MongoDB).Collection("device"),
+		db:         client.Database(db),
+		collection: client.Database(db).Collection("device"),
 	}
 }
 
@@ -36,7 +35,7 @@ func (m *DeviceManger) InsertMany(items []interface{}) (*mongo.InsertManyResult,
 
 // find
 func (m *DeviceManger) FindOne(filter bson.D) (*Device, error) {
-	var result *Device
+	result := &Device{}
 	err := m.collection.FindOne(context.TODO(), filter).Decode(result)
 	return result, err
 }

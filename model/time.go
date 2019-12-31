@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 	"time"
 )
 
@@ -35,4 +36,9 @@ func (t *Timestamp) UnmarshalJSON(src []byte) error {
 	ts, err = time.Parse(layout, string(src))
 	*t = Timestamp(ts)
 	return err
+}
+
+// todo: time in mongo implement bson.MarshalBSONValue
+func (t *Timestamp) MarshalBSONValue() (bsontype.Type, []byte, error) {
+	return bsontype.DateTime, []byte{}, nil
 }

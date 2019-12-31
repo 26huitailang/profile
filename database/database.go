@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
+	"github.com/labstack/gommon/log"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -24,7 +25,8 @@ func NewMongo(username, password, host, db string) (*mongo.Client, error) {
 }
 
 func GenMongoURI(username, password, host, db string) string {
-	uri := fmt.Sprintf("mongodb://%s:%s@%s/%s?authSource=develop", username, password, host, db)
+	uri := fmt.Sprintf("mongodb://%s:%s@%s/%s?authSource=%s", username, password, host, db, db)
+	log.Printf("mongodb uri: %s", uri)
 	return uri
 }
 

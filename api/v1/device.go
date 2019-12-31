@@ -41,7 +41,7 @@ func (h *ViewHandler) FindDevices(c echo.Context) error {
 // @Router /device [post]
 func (h *ViewHandler) CreateDevice(c echo.Context) error {
 	item := model.NewDevice()
-	if err := c.Bind(&item); err != nil {
+	if err := c.Bind(item); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	item, err := h.store.InsertOneDevice(item)

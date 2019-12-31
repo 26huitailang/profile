@@ -19,7 +19,7 @@ type BaseModelWithTime struct {
 func NewDevice() *Device {
 	return &Device{
 		BaseModelWithTime: BaseModelWithTime{CreatedAt: Timestamp(time.Now()), UpdatedAt: Timestamp(time.Now())},
-		ID:                primitive.ObjectID{},
+		ID:                primitive.NewObjectID(),
 		Name:              "",
 		Description:       "",
 		Price:             0,

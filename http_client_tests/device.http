@@ -4,7 +4,9 @@ Authorization: Bearer {{token}}
 
 {
   "name": "tv",
-  "buyAt": "2019-10-10"
+  "buyAt": "2019-10-10",
+  "category": 1,
+  "price": 99
 }
 
 ###

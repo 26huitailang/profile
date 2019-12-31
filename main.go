@@ -31,10 +31,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("DB connect error: %s", err)
 	}
-	// 自动迁移模式
-	//db.AutoMigrate(&model.Goods{}, &model.GoodsImage{})
 
-	store := model.NewDeviceManager(client)
+	store := model.NewDeviceManager(client, database.MongoDB)
 	h := v1.NewViewHandler(store)
 
 	e := app.NewEchoApp(h)
