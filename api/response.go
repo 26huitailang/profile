@@ -5,6 +5,7 @@ import (
 	"io"
 )
 
+// code in response data, not http.status_code
 const (
 	CodeSuccess = 20000
 	// 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
@@ -13,19 +14,22 @@ const (
 	CodeTokenExpired         = 50014
 )
 
+// Code: custom code type, not http status code
+// Data: data to show
+// Message: message to explain code
 type CustomResponse struct {
 	Code    int         `json:"code"`
 	Data    interface{} `json:"data"`
 	Message string      `json:"message"`
 }
 
-func ResponseV1(code int, info string, data interface{}) CustomResponse {
-	msg := CustomResponse{
+func ResponseV1(code int, message string, data interface{}) (customResp CustomResponse) {
+	customResp = CustomResponse{
 		Code:    code,
-		Message: info,
+		Message: message,
 		Data:    data,
 	}
-	return msg
+	return
 }
 
 func DecodeResponseV1(buffer io.Reader) CustomResponse {

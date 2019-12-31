@@ -11,19 +11,18 @@ import (
 	"net/http/httptest"
 	"profile/api"
 	v1 "profile/api/v1"
+	"profile/app"
 	"profile/model"
 	"reflect"
 	"testing"
 	"time"
 )
 
-// todo: unittest for Goods API
-
 var DevicePhone = &model.Device{Name: "phone", Price: 299}
-var GoodsTV = &model.Device{Name: "tv", Price: 399}
-var GoodsSwitch = &model.Device{Name: "switch", Price: 199}
+var DeviceTV = &model.Device{Name: "tv", Price: 399}
+var DeviceSwitch = &model.Device{Name: "switch", Price: 199}
 
-func TestViewHandler_FindGoods(t *testing.T) {
+func TestViewHandler_FindDevices(t *testing.T) {
 	e := echo.New()
 
 	cases := []struct {
@@ -31,14 +30,14 @@ func TestViewHandler_FindGoods(t *testing.T) {
 		devices []*model.Device
 		want    int
 	}{
-		{name: "returns one goods", devices: []*model.Device{DevicePhone}, want: 1},
-		{name: "returns two goods", devices: []*model.Device{DevicePhone, GoodsTV}, want: 2},
-		{name: "returns three goods", devices: []*model.Device{DevicePhone, GoodsTV, GoodsSwitch}, want: 3},
+		{name: "returns one device", devices: []*model.Device{DevicePhone}, want: 1},
+		{name: "returns two devices", devices: []*model.Device{DevicePhone, DeviceTV}, want: 2},
+		{name: "returns three devices", devices: []*model.Device{DevicePhone, DeviceTV, DeviceSwitch}, want: 3},
 	}
 
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
-			request := httptest.NewRequest(echo.GET, "/devices", nil)
+			request := httptest.NewRequest(echo.GET, "/api/v2/devices", nil)
 			response := httptest.NewRecorder()
 			store := &StubDeviceManager{}
 			h := v1.NewViewHandler(store)
@@ -56,7 +55,7 @@ func TestViewHandler_FindGoods(t *testing.T) {
 	}
 }
 
-func TestViewHandler_CreateGoods(t *testing.T) {
+func TestViewHandler_CreateDevice(t *testing.T) {
 	e := echo.New()
 
 	cases := []struct {
@@ -64,13 +63,13 @@ func TestViewHandler_CreateGoods(t *testing.T) {
 		device *model.Device
 		want   *model.Device
 	}{
-		{name: "create one goods", device: DevicePhone, want: DevicePhone},
+		{name: "create one device", device: DevicePhone, want: DevicePhone},
 	}
 
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
 			jsonBytes, _ := json.Marshal(tt.device)
-			request := httptest.NewRequest(echo.POST, "/goods", bytes.NewReader(jsonBytes))
+			request := httptest.NewRequest(echo.POST, "/api/v2/device", bytes.NewReader(jsonBytes))
 			request.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			response := httptest.NewRecorder()
 			store := &StubDeviceManager{}
@@ -82,35 +81,26 @@ func TestViewHandler_CreateGoods(t *testing.T) {
 			got := api.DecodeResponseV1(response.Body)
 			assert.Equal(t, http.StatusCreated, response.Code)
 			assert.Equal(t, "", got.Message)
+			fmt.Printf("got: %v", got.Data)
 			reflect.DeepEqual(tt.want, got.Data)
 		})
 	}
-
-	t.Run("unsupported media type", func(t *testing.T) {
-
-	})
 }
 
-func TestViewHandler_EditGoods(t *testing.T) {
-}
-
-func TestBindUnmarshalParam(t *testing.T) {
-	//store := &StubDeviceManager{}
-	//h := v1.NewViewHandler(store)
-	//e := app.NewEchoApp(h)
-	e := echo.New()
+func TestViewHandler_CreateDevice_BindUnmarshalParam(t *testing.T) {
+	store := &StubDeviceManager{}
+	h := v1.NewViewHandler(store)
+	e := app.NewEchoApp(h)
 	ts := model.Timestamp(time.Date(2016, 12, 6, 0, 0, 0, 0, time.UTC))
 	jsonBytes, _ := json.Marshal(struct {
 		Name  string `json:"name"`
 		BuyAt string `json:"buyAt"`
 	}{
 		Name:  "tv",
-		BuyAt: "2016-10-10",
+		BuyAt: "2016-12-06",
 	})
-	fmt.Printf("%v", string(jsonBytes))
-	req := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(jsonBytes))
-	//req := httptest.NewRequest(http.MethodPost, "/api/v1/device?buyAt=2016-12-06T00:00:00Z", bytes.NewReader(jsonBytes))
-	req.Header.Set("Content-Type", "application/json")
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/device", bytes.NewReader(jsonBytes))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	result := struct {
@@ -125,6 +115,9 @@ func TestBindUnmarshalParam(t *testing.T) {
 		assert.Equal(ts, result.T)
 		assert.Equal("tv", result.N)
 	}
+}
+
+func TestViewHandler_EditGoods(t *testing.T) {
 }
 
 type StubDeviceManager struct {

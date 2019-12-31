@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
@@ -42,7 +41,6 @@ func (h *ViewHandler) FindDevices(c echo.Context) error {
 // @Router /goods [post]
 func (h *ViewHandler) CreateDevice(c echo.Context) error {
 	item := new(model.Device)
-	fmt.Printf("%v", c.Request())
 	if err := c.Bind(item); err != nil {
 		return err
 	}
