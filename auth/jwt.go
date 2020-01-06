@@ -16,7 +16,7 @@ type JwtCustomClaims struct {
 	jwt.StandardClaims
 }
 
-func GenJWT(name string, isAdmin bool, key []byte, exp time.Duration) (string, error) {
+func GenJWT(name string, key []byte, exp time.Duration) (string, error) {
 
 	// Set claims
 	claims := &JwtCustomClaims{

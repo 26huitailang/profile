@@ -7,16 +7,14 @@ import (
 
 func TestGenJWT(t *testing.T) {
 	type args struct {
-		name    string
-		isAdmin bool
-		key     []byte
-		exp     time.Duration
-		gap     time.Duration
+		name string
+		key  []byte
+		exp  time.Duration
+		gap  time.Duration
 	}
 	type want struct {
-		name    string
-		isAdmin bool
-		expire  bool
+		name   string
+		expire bool
 	}
 	tests := []struct {
 		name    string
@@ -26,20 +24,20 @@ func TestGenJWT(t *testing.T) {
 	}{
 		{
 			name:    "token expire",
-			args:    args{"admin", true, []byte("secret"), time.Millisecond * 100, 0},
-			want:    want{"admin", true, true},
+			args:    args{"admin", []byte("secret"), time.Millisecond * 100, 0},
+			want:    want{"admin", true},
 			wantErr: false,
 		},
 		{
 			name:    "token out of expire",
-			args:    args{"admin", false, []byte("secret"), time.Millisecond * 1, time.Millisecond * 1000},
-			want:    want{"admin", false, false},
+			args:    args{"admin", []byte("secret"), time.Millisecond * 1, time.Millisecond * 1000},
+			want:    want{"admin", false},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tokenStr, err := GenJWT(tt.args.name, tt.args.isAdmin, tt.args.key, tt.args.exp)
+			tokenStr, err := GenJWT(tt.args.name, tt.args.key, tt.args.exp)
 			token, err := ParseToken(tokenStr, tt.args.key)
 			time.Sleep(tt.args.gap)
 			claims := ParseClaims(token)
@@ -55,13 +53,11 @@ func TestGenJWT(t *testing.T) {
 			}
 
 			got := struct {
-				name    string
-				isAdmin bool
-				expire  bool
+				name   string
+				expire bool
 			}{
-				name:    claims.Name,
-				isAdmin: claims.Admin,
-				expire:  expireValid,
+				name:   claims.Name,
+				expire: expireValid,
 			}
 			if got != tt.want {
 				t.Errorf("GenJWT() got = %v, want %v", got, tt.want)
