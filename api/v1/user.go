@@ -18,7 +18,7 @@ func (h *ViewHandler) Login(c echo.Context) error {
 		return echo.ErrUnauthorized
 	}
 
-	t, err := auth.GenJWT("admin", true, []byte("secret-super-passwd"), time.Hour*6)
+	t, err := auth.GenJWT("admin", []byte("secret-super-passwd"), time.Hour*6)
 	if err != nil {
 		return err
 	}

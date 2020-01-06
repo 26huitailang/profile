@@ -92,7 +92,7 @@ func overrideConfig(level string) {
 	case LevelProduct:
 		viper.Set("db.name", DBNameProd)
 	default:
-		err := fmt.Errorf("no this level %d", level)
+		err := fmt.Errorf("no this level %s", level)
 		fmt.Print(err)
 		os.Exit(-1)
 	}
