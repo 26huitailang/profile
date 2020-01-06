@@ -33,7 +33,7 @@ func main() {
 		log.Fatalf("DB connect error: %s", err)
 	}
 
-	store := model.NewDeviceManager(client, database.MongoDB)
+	store := model.NewDeviceManager(client, config.Cfg.Mongo.DB)
 	h := v1.NewViewHandler(store)
 
 	e := app.NewEchoApp(h)

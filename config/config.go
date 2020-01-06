@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/viper"
 	"log"
 	"os"
+	"reflect"
 )
 
 const (
@@ -85,7 +86,7 @@ func InitConfig() {
 	if err != nil {
 		log.Fatalf("unable to decode into struct, %v", err)
 	}
-	fmt.Printf("%+v\n", Cfg)
+	fmt.Println(Cfg)
 }
 
 func GetBool(key string) bool {
@@ -104,4 +105,17 @@ func parseFlag() {
 	pflag.String("server.port", Port, "server port, default :5000")
 	pflag.Parse()
 	viper.BindPFlags(pflag.CommandLine)
+}
+
+func (c Config) String() (ret string) {
+	s := reflect.ValueOf(&c).Elem()
+	typeOfT := s.Type()
+
+	for i := 0; i < s.NumField(); i++ {
+		f := s.Field(i)
+		item := fmt.Sprintf("%d: %s %s = %+v\n", i,
+			typeOfT.Field(i).Name, f.Type(), f.Interface())
+		ret += item
+	}
+	return
 }
