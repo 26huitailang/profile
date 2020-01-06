@@ -2,9 +2,9 @@ package model
 
 import (
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/bson"
 	"profile/database"
 	"testing"
-	"time"
 )
 
 const MongoTestDB = "test"
@@ -17,7 +17,7 @@ func TestAssetManger_InsertOne(t *testing.T) {
 	item1.Description = "desc"
 	item1.Price = 99
 	item1.Category = 1
-	item1.BuyAt = Timestamp(time.Now())
+	item1.BuyAt = Now()
 
 	testCases := []struct {
 		name string
@@ -34,17 +34,56 @@ func TestAssetManger_InsertOne(t *testing.T) {
 				t.Fatal(err)
 			}
 			manager := NewDeviceManager(client, MongoTestDB)
-			//defer helperDropCollection(manager)
+			defer helperDropCollection(manager)
 
 			insertResult, err := manager.InsertOne(item1)
 			if err != nil {
 				t.Fatal(err)
 			}
-			assert.Equal(t, insertResult.InsertedID, tt.want)
+			assert.Equal(t, tt.want, insertResult.InsertedID)
 		})
 	}
 }
 
+func TestAssetManger_InsertOne_Time_OK(t *testing.T) {
+	now := Now()
+	item1 := NewDevice()
+	item1.Name = "1"
+	item1.Description = "desc"
+	item1.Price = 99
+	item1.Category = 1
+	item1.BuyAt = now
+
+	testCases := []struct {
+		name string
+		data *Device
+		want Timestamp
+	}{
+		{name: "insert date with millisecond accuracy", data: item1, want: now},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			client, err := database.NewMongo(MongoTestUsername, MongoTestPassword, database.MongoHost, MongoTestDB)
+			if err != nil {
+				t.Fatal(err)
+			}
+			manager := NewDeviceManager(client, MongoTestDB)
+			defer helperDropCollection(manager)
+
+			insertResult, err := manager.InsertOne(item1)
+			if err != nil {
+				t.Fatal(err)
+			}
+			item2, err := manager.FindOne(bson.D{{"_id", insertResult.InsertedID}})
+			if err != nil {
+				t.Fatal(err)
+			}
+			t.Logf("want: %v got: %v", tt.want.String(), item2.BuyAt.String())
+			assert.Equal(t, tt.want, item2.BuyAt)
+		})
+	}
+}
 func helperDropCollection(m *DeviceManger) {
 	m.DropCollection()
 }
