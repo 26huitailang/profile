@@ -1,7 +1,0 @@
-level: "develop"  # test/debug/develop/product
-db:
-  name: "prod.db"
-mongodb:
-  name: "develop"
-server:
-  port: ":5000"

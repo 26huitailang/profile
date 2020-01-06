@@ -38,6 +38,7 @@ type Config struct {
 	Level  string
 	DB     `mapstructure:"db"`
 	Server `mapstructure:"server"`
+	Mongo  `mapstructure:"mongo"`
 }
 
 var Cfg Config

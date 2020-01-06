@@ -10,12 +10,12 @@ import (
 	"time"
 )
 
-const (
-	MongoUsername string = "develop"
-	MongoPassword string = "develop"
-	MongoHost     string = "10.200.233.224:27017"
-	MongoDB       string = "develop"
-)
+//const (
+//	MongoUsername string = "develop"
+//	MongoPassword string = "develop"
+//	MongoHost     string = "10.200.233.224:27017"
+//	MongoDB       string = "develop"
+//)
 
 func NewMongo(username, password, host, db string) (*mongo.Client, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
