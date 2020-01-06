@@ -1,11 +1,8 @@
 level: "test"  # test/debug/develop/product
 
 db:
-  name: "prod.db"
+  name: "test.db"
 mongo:
   db: "test"
   username: "test"
   password: "test"
-  host: "127.0.0.1:27017"
-server:
-  port: ":5000"

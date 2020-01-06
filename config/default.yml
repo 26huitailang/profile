@@ -1,7 +1,7 @@
 level: "develop"  # test/debug/develop/product
 
-db:
-  name: "prod.db"
+sqlite:
+  name: "develop.db"
 mongo:
   db: "develop"
   username: "develop"

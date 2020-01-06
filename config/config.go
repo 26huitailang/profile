@@ -22,7 +22,7 @@ const (
 	Port       = ":5000"
 )
 
-type DB struct {
+type Sqlite struct {
 	Name string `mapstructure:"name"`
 }
 type Mongo struct {
@@ -36,7 +36,7 @@ type Server struct {
 }
 type Config struct {
 	Level  string
-	DB     `mapstructure:"db"`
+	Sqlite `mapstructure:"sqlite"`
 	Server `mapstructure:"server"`
 	Mongo  `mapstructure:"mongo"`
 }
