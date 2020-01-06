@@ -1,6 +1,13 @@
+# env
 init-env:
 	go mod tidy
 	go get -u github.com/swaggo/swag/cmd/swag
+clean:
+	rm profile
+vendor:
+	go mod vendor
+
+# program
 build:
 	go build -o main .
 run:
