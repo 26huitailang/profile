@@ -26,7 +26,7 @@ import (
 // @host localhost:5000
 // @BasePath /api/v1
 func main() {
-	// conifg
+	// config
 	client, err := database.NewMongo("develop", "develop", database.MongoHost, database.MongoDB)
 	if err != nil {
 		log.Fatalf("DB connect error: %s", err)

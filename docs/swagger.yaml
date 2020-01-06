@@ -1,0 +1,120 @@
+basePath: /api/v1
+definitions:
+  model.Device:
+    properties:
+      buyAt:
+        $ref: '#/definitions/model.Timestamp'
+        type: object
+      category:
+        enum:
+        - 0
+        - 1
+        - 2
+        example: 1
+        type: integer
+      createdAt:
+        $ref: '#/definitions/model.Timestamp'
+        type: object
+      description:
+        type: string
+      expiredAt:
+        $ref: '#/definitions/model.Timestamp'
+        type: object
+      id:
+        type: string
+      images:
+        items:
+          $ref: '#/definitions/model.Image'
+        type: array
+      name:
+        type: string
+      updatedAt:
+        $ref: '#/definitions/model.Timestamp'
+        type: object
+    required:
+    - category
+    - name
+    type: object
+  model.Image:
+    properties:
+      createdAt:
+        $ref: '#/definitions/model.Timestamp'
+        type: object
+      path:
+        type: string
+      updatedAt:
+        $ref: '#/definitions/model.Timestamp'
+        type: object
+    type: object
+  model.Timestamp: {}
+host: localhost:5000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server Petstore server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /device:
+    post:
+      consumes:
+      - application/json
+      description: create new one
+      operationId: create-one-goods
+      parameters:
+      - description: add model.Device
+        in: body
+        name: device
+        required: true
+        schema:
+          $ref: '#/definitions/model.Device'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Device'
+      summary: Create one new item
+      tags:
+      - goods
+  /goods:
+    get:
+      operationId: get-all-goods
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Token:
+              description: qwerty
+              type: string
+          schema:
+            $ref: '#/definitions/model.Device'
+      summary: All goods
+      tags:
+      - goods
+    put:
+      consumes:
+      - application/json
+      description: PUT method to update
+      operationId: edit-goods
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Device'
+      summary: EditDevice PUT to update goods
+      tags:
+      - goods
+swagger: "2.0"
