@@ -27,6 +27,7 @@ import (
 // @BasePath /api/v1
 func main() {
 	// config
+	config.InitConfig()
 	client, err := database.NewMongo("develop", "develop", database.MongoHost, database.MongoDB)
 	if err != nil {
 		log.Fatalf("DB connect error: %s", err)

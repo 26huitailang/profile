@@ -43,25 +43,43 @@ type Config struct {
 
 var Cfg Config
 
-func init() {
+func InitConfig() {
 	// default
-	viper.SetDefault("level", LevelDevelop)
+	configType := "yaml"
+	defaultPath1 := "./config"
+	defaultPath2 := "."
 
-	// flags
-	parseFlag()
-
+	v := viper.New()
 	// config file
-	viper.SetConfigName("config") // name of config file (without extension)
-	viper.SetConfigType("yaml")
-	//viper.AddConfigPath("/etc/appname/")  // path to look for the config file in
-	//viper.AddConfigPath("$HOME/.appname") // call multiple times to add many search paths
-	viper.AddConfigPath("./config") // optionally look for config in the working directory
-	err := viper.ReadInConfig()     // Find and read the config file
-	if err != nil {                 // Handle errors reading the config file
+	v.SetConfigName("default") // name of config file (without extension)
+	v.SetConfigType(configType)
+	v.AddConfigPath(defaultPath1) // optionally look for config in the working directory
+	v.AddConfigPath(defaultPath2) // optionally look for config in the working directory
+
+	err := v.ReadInConfig() // Find and read the config file
+	if err != nil {         // Handle errors reading the config file
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
 
-	overrideConfig(viper.GetString("level"))
+	configs := v.AllSettings()
+	for k, v := range configs {
+		viper.SetDefault(k, v)
+	}
+
+	env := os.Getenv("GO_ENV")
+
+	if env != "" {
+		viper.SetConfigName(env)
+		viper.AddConfigPath(defaultPath1)
+		viper.AddConfigPath(defaultPath2)
+		viper.SetConfigType(configType)
+		err = viper.ReadInConfig()
+		if err != nil {
+			panic(fmt.Errorf("Fatal error config file: %s \n", err))
+		}
+	}
+	// flags
+	//parseFlag()
 
 	err = viper.Unmarshal(&Cfg)
 	if err != nil {
@@ -82,25 +100,7 @@ func Sub(key string) *viper.Viper {
 	return viper.Sub(key)
 }
 
-func overrideConfig(level string) {
-	switch level {
-	case LevelTest:
-		viper.Set("db.name", DBNameTest)
-	case LevelDebug:
-		viper.Set("db.name", DBNameDev)
-	case LevelDevelop:
-		viper.Set("db.name", DBNameDev)
-	case LevelProduct:
-		viper.Set("db.name", DBNameProd)
-	default:
-		err := fmt.Errorf("no this level %s", level)
-		fmt.Print(err)
-		os.Exit(-1)
-	}
-}
-
 func parseFlag() {
-	pflag.String("level", LevelDevelop, "env level, default develop, [test/debug/develop/product]")
 	pflag.String("server.port", Port, "server port, default :5000")
 	pflag.Parse()
 	viper.BindPFlags(pflag.CommandLine)
