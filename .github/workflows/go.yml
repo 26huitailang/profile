@@ -18,7 +18,7 @@ jobs:
 
       - name: Launch MongoDB
         run: |
-          docker-compose up mongo
+          docker-compose up -d
       - name: Sleep
         uses: jakejarvis/wait-action@master
         with:
