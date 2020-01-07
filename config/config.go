@@ -10,17 +10,7 @@ import (
 )
 
 const (
-	LevelTest    = "test"
-	LevelDebug   = "debug"
-	LevelDevelop = "develop"
-	LevelProduct = "product"
-)
-
-const (
-	DBNameTest = "test.db"
-	DBNameDev  = "dev.db"
-	DBNameProd = "prod.db"
-	Port       = ":5000"
+	Port = ":5000"
 )
 
 type Sqlite struct {
@@ -78,7 +68,9 @@ func InitConfig() {
 	viper.AddConfigPath(defaultPath3)
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(fmt.Errorf("Fatal error <local> config file: %s \n", err))
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			panic(fmt.Errorf("Fatal error <local> config file: %s \n", err))
+		}
 	}
 
 	// flags
@@ -127,8 +119,8 @@ func initNamedViper(configName string) *viper.Viper {
 	v.SetConfigName(configName) // name of config file (without extension)
 	v.SetConfigType(configType)
 	v.AddConfigPath(defaultPath1) // optionally look for config in the working directory
-	v.AddConfigPath(defaultPath2) // optionally look for config in the working directory
-	v.AddConfigPath(defaultPath3) // optionally look for config in the working directory
+	v.AddConfigPath(defaultPath2)
+	v.AddConfigPath(defaultPath3)
 
 	err := v.ReadInConfig() // Find and read the config file
 	if err != nil {         // Handle errors reading the config file
