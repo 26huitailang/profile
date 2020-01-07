@@ -3,13 +3,10 @@ package model
 import (
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson"
+	"profile/config"
 	"profile/database"
 	"testing"
 )
-
-const MongoTestDB = "test"
-const MongoTestUsername = "test"
-const MongoTestPassword = "test"
 
 func TestAssetManger_InsertOne(t *testing.T) {
 	item1 := NewDevice()
@@ -29,11 +26,11 @@ func TestAssetManger_InsertOne(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			client, err := database.NewMongo(MongoTestUsername, MongoTestPassword, database.MongoHost, MongoTestDB)
+			client, err := database.NewMongo(config.Cfg.Mongo.Username, config.Cfg.Password, config.Cfg.Host, config.Cfg.Mongo.DB)
 			if err != nil {
 				t.Fatal(err)
 			}
-			manager := NewDeviceManager(client, MongoTestDB)
+			manager := NewDeviceManager(client, config.Cfg.Mongo.DB)
 			defer helperDropCollection(manager)
 
 			insertResult, err := manager.InsertOne(item1)
@@ -64,11 +61,11 @@ func TestAssetManger_InsertOne_Time_OK(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			client, err := database.NewMongo(MongoTestUsername, MongoTestPassword, database.MongoHost, MongoTestDB)
+			client, err := database.NewMongo(config.Cfg.Mongo.Username, config.Cfg.Password, config.Cfg.Host, config.Cfg.Mongo.DB)
 			if err != nil {
 				t.Fatal(err)
 			}
-			manager := NewDeviceManager(client, MongoTestDB)
+			manager := NewDeviceManager(client, config.Cfg.Mongo.DB)
 			defer helperDropCollection(manager)
 
 			insertResult, err := manager.InsertOne(item1)
