@@ -28,7 +28,7 @@ func TestAssetManger_InsertOne(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			helperEnvSet()
-			client, err := database.NewMongo(config.Cfg.Mongo.Username, config.Cfg.Password, config.Cfg.Host, config.Cfg.Mongo.DB)
+			client, err := database.NewMongo()
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -64,7 +64,7 @@ func TestAssetManger_InsertOne_Time_OK(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			helperEnvSet()
-			client, err := database.NewMongo(config.Cfg.Mongo.Username, config.Cfg.Password, config.Cfg.Host, config.Cfg.Mongo.DB)
+			client, err := database.NewMongo()
 			if err != nil {
 				t.Fatal(err)
 			}

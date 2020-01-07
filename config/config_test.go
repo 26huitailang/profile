@@ -21,7 +21,6 @@ func TestConfig_Mongo(t *testing.T) {
 		_ = os.Setenv("GO_ENV", tt.configLevel)
 		config.InitConfig()
 		t.Run(tt.name, func(t *testing.T) {
-			t.Logf("%v", config.Cfg)
 			assert.Equal(t, config.Cfg.Mongo.DB, tt.configMongo.DB)
 			assert.Equal(t, config.Cfg.Mongo.Username, tt.configMongo.Username)
 			assert.Equal(t, config.Cfg.Mongo.Password, tt.configMongo.Password)

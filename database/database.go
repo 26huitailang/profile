@@ -7,12 +7,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"profile/config"
 	"time"
 )
 
-func NewMongo(username, password, host, db string) (*mongo.Client, error) {
+func NewMongo() (*mongo.Client, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	uri := GenMongoURI(username, password, host, db)
+	uri := GenMongoURI(config.Cfg.Mongo.Username, config.Cfg.Mongo.Password, config.Cfg.Mongo.Host, config.Cfg.Mongo.DB)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	return client, err
 }

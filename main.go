@@ -28,7 +28,7 @@ import (
 func main() {
 	// config
 	config.InitConfig()
-	client, err := database.NewMongo(config.Cfg.Mongo.Username, config.Cfg.Mongo.Password, config.Cfg.Mongo.Host, config.Cfg.Mongo.DB)
+	client, err := database.NewMongo()
 	if err != nil {
 		log.Fatalf("DB connect error: %s", err)
 	}
