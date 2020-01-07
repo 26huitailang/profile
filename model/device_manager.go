@@ -10,15 +10,11 @@ import (
 )
 
 type DeviceManger struct {
-	client     *mongo.Client
 	collection *mongo.Collection
-	db         *mongo.Database
 }
 
 func NewDeviceManager(client *mongo.Client, db string) *DeviceManger {
 	return &DeviceManger{
-		client:     client,
-		db:         client.Database(db),
 		collection: client.Database(db).Collection("device"),
 	}
 }
@@ -28,8 +24,12 @@ func (m *DeviceManger) InsertOne(item *Device) (*mongo.InsertOneResult, error) {
 	insertResult, err := m.collection.InsertOne(context.TODO(), item)
 	return insertResult, err
 }
-func (m *DeviceManger) InsertMany(items []interface{}) (*mongo.InsertManyResult, error) {
-	insertResult, err := m.collection.InsertMany(context.TODO(), items)
+func (m *DeviceManger) InsertMany(items []*Device) (*mongo.InsertManyResult, error) {
+	var data []interface{}
+	for _, item := range items {
+		data = append(data, item)
+	}
+	insertResult, err := m.collection.InsertMany(context.TODO(), data)
 	return insertResult, err
 }
 
@@ -43,16 +43,16 @@ func (m *DeviceManger) Find(filter bson.D, options *options.FindOptions) []*Devi
 	var result []*Device
 	cur, err := m.collection.Find(context.TODO(), filter, options)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	for cur.Next(context.TODO()) {
-		var elem *Device
-		err := cur.Decode(elem)
+		var elem Device
+		err := cur.Decode(&elem)
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
-		result = append(result, elem)
+		result = append(result, &elem)
 	}
 
 	return result
