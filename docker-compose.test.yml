@@ -1,15 +1,6 @@
 version: '3'
 
 services:
-  web:
-    build: .
-    container_name: profile_web
-    working_dir: /code
-    command: go run main.go
-    volumes:
-      - .:/code
-    ports:
-      - "5000:5000"
   mongo:
     image: mongo:4.2
     container_name: mongodb

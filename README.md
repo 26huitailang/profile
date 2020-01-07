@@ -1,5 +1,7 @@
 # profile
 
+![](https://github.com/26huitailang/profile/workflows/Go/badge.svg)
+
 ## Packages
 
 - echo: web server
