@@ -22,6 +22,9 @@ jobs:
         id: go
       - name: Go Env
         run: go env
+      - name: Get dependencies
+        run: |
+          go mod download
 
       - name: Launch MongoDB
         run: |
@@ -34,10 +37,6 @@ jobs:
 
       - name: Check running containers
         run: docker ps
-
-      - name: Get dependencies
-        run: |
-          go mod vendor
 
       - name: Test
         run: go test -v -cover ./...
