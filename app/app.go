@@ -14,8 +14,12 @@ import (
 
 func NewEchoApp(h *v1.ViewHandler) *echo.Echo {
 	e := echo.New()
+	e.Use(middleware.Recover())
+
+	// todo: debug mode
 	e.Debug = true
 	ConfigCustomContext(e)
+
 	if e.Debug {
 		e.Use(middleware.BodyDump(func(context echo.Context, req []byte, res []byte) {
 			fmt.Fprintf(os.Stderr, "Request: %v\n", string(req))

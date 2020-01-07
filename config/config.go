@@ -10,6 +10,13 @@ import (
 )
 
 const (
+	LevelTest    = "test"
+	LevelDebug   = "debug"
+	LevelDevelop = "develop"
+	LevelProduct = "product"
+)
+
+const (
 	Port = ":5000"
 )
 
