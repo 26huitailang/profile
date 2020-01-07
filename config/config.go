@@ -44,41 +44,43 @@ type Config struct {
 
 var Cfg Config
 
+const (
+	configType   = "yaml"
+	defaultPath1 = "."
+	defaultPath2 = "./config"
+	defaultPath3 = "../config"
+)
+
 func InitConfig() {
 	// default
-	configType := "yaml"
-	defaultPath1 := "./config"
-	defaultPath2 := "."
-
-	v := viper.New()
-	// config file
-	v.SetConfigName("default") // name of config file (without extension)
-	v.SetConfigType(configType)
-	v.AddConfigPath(defaultPath1) // optionally look for config in the working directory
-	v.AddConfigPath(defaultPath2) // optionally look for config in the working directory
-
-	err := v.ReadInConfig() // Find and read the config file
-	if err != nil {         // Handle errors reading the config file
-		panic(fmt.Errorf("Fatal error config file: %s \n", err))
-	}
-
+	v := initNamedViper("default")
 	configs := v.AllSettings()
+
 	for k, v := range configs {
 		viper.SetDefault(k, v)
 	}
 
+	// env
 	env := os.Getenv("GO_ENV")
-
 	if env != "" {
-		viper.SetConfigName(env)
-		viper.AddConfigPath(defaultPath1)
-		viper.AddConfigPath(defaultPath2)
-		viper.SetConfigType(configType)
-		err = viper.ReadInConfig()
-		if err != nil {
-			panic(fmt.Errorf("Fatal error config file: %s \n", err))
+		v2 := initNamedViper(env)
+		configs = v2.AllSettings()
+		for k, v := range configs {
+			viper.Set(k, v)
 		}
 	}
+
+	// custom
+	viper.SetConfigName("local")
+	viper.SetConfigType(configType)
+	viper.AddConfigPath(defaultPath1)
+	viper.AddConfigPath(defaultPath2)
+	viper.AddConfigPath(defaultPath3)
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(fmt.Errorf("Fatal error <local> config file: %s \n", err))
+	}
+
 	// flags
 	//parseFlag()
 
@@ -118,4 +120,19 @@ func (c Config) String() (ret string) {
 		ret += item
 	}
 	return
+}
+
+func initNamedViper(configName string) *viper.Viper {
+	v := viper.New()
+	v.SetConfigName(configName) // name of config file (without extension)
+	v.SetConfigType(configType)
+	v.AddConfigPath(defaultPath1) // optionally look for config in the working directory
+	v.AddConfigPath(defaultPath2) // optionally look for config in the working directory
+	v.AddConfigPath(defaultPath3) // optionally look for config in the working directory
+
+	err := v.ReadInConfig() // Find and read the config file
+	if err != nil {         // Handle errors reading the config file
+		panic(fmt.Errorf("Fatal error <%s> config file: %s \n", configName, err))
+	}
+	return v
 }

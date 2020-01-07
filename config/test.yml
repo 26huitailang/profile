@@ -1,6 +1,6 @@
 level: "test"  # test/debug/develop/product
 
-db:
+sqlite:
   name: "test.db"
 mongo:
   db: "test"

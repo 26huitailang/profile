@@ -22,3 +22,6 @@ data/
 *.db
 
 # swagger
+
+# config
+local.yml
