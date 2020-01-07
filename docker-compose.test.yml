@@ -10,6 +10,6 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - "./data/mongo:/data/db"
+      - "~/data/mongo:/data/db"
       - "./mongo-entrypoint/:/docker-entrypoint-initdb.d/"
-      - "./data/log:/data/log"
+      - "~/data/log:/data/log"
