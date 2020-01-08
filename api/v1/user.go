@@ -34,5 +34,5 @@ func (h *ViewHandler) UserInfo(c echo.Context) error {
 
 func (h *ViewHandler) Logout(c echo.Context) error {
 	println("user logout")
-	return c.JSON(http.StatusOK, echo.Map{})
+	return c.JSON(http.StatusOK, echo.Map{"code": api.CodeSuccess})
 }
