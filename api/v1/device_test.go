@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
 	"net/http/httptest"
 	"profile/api"
@@ -126,6 +127,7 @@ func TestViewHandler_CreateDevice_BindUnmarshalParam(t *testing.T) {
 func TestViewHandler_EditGoods(t *testing.T) {
 }
 
+// stub
 type StubDeviceManager struct {
 	Devices []*model.Device
 }
@@ -159,6 +161,11 @@ func (s *StubDeviceManager) UpdateOneDevice(item *model.Device) (*model.Device, 
 	return item, nil
 }
 
+func (s *StubDeviceManager) DeleteDeviceList(ids []primitive.ObjectID) (*mongo.DeleteResult, error) {
+	panic("implement me")
+}
+
+// helper
 func insertDevices(t *testing.T, store *StubDeviceManager, devices []*model.Device) {
 	t.Helper()
 

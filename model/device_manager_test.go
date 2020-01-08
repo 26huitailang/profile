@@ -3,7 +3,6 @@ package model
 import (
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"os"
@@ -164,39 +163,39 @@ func TestDeviceManger_UpdateOneDevice(t *testing.T) {
 	}
 }
 
-func TestDeviceManger_DeleteDeviceList(t *testing.T) {
-	type fields struct {
-		collection *mongo.Collection
-	}
-	type args struct {
-		ids []primitive.ObjectID
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantRet *mongo.DeleteResult
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		panic("implement me")
-		t.Run(tt.name, func(t *testing.T) {
-			m := &DeviceManger{
-				collection: tt.fields.collection,
-			}
-			gotRet, err := m.DeleteDeviceList(tt.args.ids)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("DeleteDeviceList() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(gotRet, tt.wantRet) {
-				t.Errorf("DeleteDeviceList() gotRet = %v, want %v", gotRet, tt.wantRet)
-			}
-		})
-	}
-}
+//func TestDeviceManger_DeleteDeviceList(t *testing.T) {
+//	type fields struct {
+//		collection *mongo.Collection
+//	}
+//	type args struct {
+//		ids []primitive.ObjectID
+//	}
+//	tests := []struct {
+//		name    string
+//		fields  fields
+//		args    args
+//		wantRet *mongo.DeleteResult
+//		wantErr bool
+//	}{
+//		// TODO: Add test cases.
+//	}
+//	for _, tt := range tests {
+//		panic("implement me")
+//		t.Run(tt.name, func(t *testing.T) {
+//			m := &DeviceManger{
+//				collection: tt.fields.collection,
+//			}
+//			gotRet, err := m.DeleteDeviceList(tt.args.ids)
+//			if (err != nil) != tt.wantErr {
+//				t.Errorf("DeleteDeviceList() error = %v, wantErr %v", err, tt.wantErr)
+//				return
+//			}
+//			if !reflect.DeepEqual(gotRet, tt.wantRet) {
+//				t.Errorf("DeleteDeviceList() gotRet = %v, want %v", gotRet, tt.wantRet)
+//			}
+//		})
+//	}
+//}
 
 /* helper func */
 func helperDropCollection(m *DeviceManger) {
