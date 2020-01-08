@@ -59,6 +59,12 @@ func (t *Timestamp) UnmarshalJSON(src []byte) error {
 	return err
 }
 
+func (t *Timestamp) MarshalJSON() (dst []byte, err error) {
+	ts := time.Time(*t).UnixNano() / 1e6
+	dst = strconv.AppendInt(dst, ts, 10)
+	return
+}
+
 // MarshalBSONValue time in mongo implement ValueMarshaler
 func (t Timestamp) MarshalBSONValue() (_type bsontype.Type, b []byte, err error) {
 	_type = bson.TypeDateTime

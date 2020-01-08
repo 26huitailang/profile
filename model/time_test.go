@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"profile/model"
+	"reflect"
 	"testing"
 	"time"
 )
@@ -47,6 +48,29 @@ func TestTimestamp_UnmarshalJSON(t *testing.T) {
 			}
 
 			assert.Equal(t, tt.want, ds.T)
+		})
+	}
+}
+
+func TestTimestamp_MarshalJSON(t *testing.T) {
+	tests := []struct {
+		name    string
+		t       model.Timestamp
+		wantDst []byte
+		wantErr bool
+	}{
+		{name: "ok", t: model.Timestamp(time.Date(2020, 1, 7, 19, 28, 50, 571*1e6, time.UTC)), wantDst: []byte(`1578425330571`), wantErr: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotDst, err := tt.t.MarshalJSON()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotDst, tt.wantDst) {
+				t.Errorf("MarshalJSON() gotDst = %v, want %v", gotDst, tt.wantDst)
+			}
 		})
 	}
 }
