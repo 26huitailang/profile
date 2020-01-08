@@ -29,6 +29,11 @@ func TestTimestamp_UnmarshalJSON(t *testing.T) {
 			time: "2019-12-04T16:00:00.000Z",
 			want: model.Timestamp(time.Date(2019, 12, 4, 16, 0, 0, 0, time.UTC)),
 		},
+		{
+			name: "time format 1578425330571", // 2020/1/8 3:28:50
+			time: "1578425330571",
+			want: model.Timestamp(time.Date(2020, 1, 7, 19, 28, 50, 571*1e6, time.UTC)),
+		},
 	}
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {

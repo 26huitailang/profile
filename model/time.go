@@ -1,10 +1,12 @@
 package model
 
 import (
+	"bytes"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
 	"go.mongodb.org/mongo-driver/x/bsonx/bsoncore"
+	"strconv"
 	"time"
 )
 
@@ -31,16 +33,29 @@ func (t *Timestamp) UnmarshalParam(src string) error {
 }
 
 // UnmarshalJSON implement Unmarshaler for time
+// -> timestamp
+// -> RFC3339
+// -> `"2006-01-02"`
+// -> return err
 func (t *Timestamp) UnmarshalJSON(src []byte) error {
-	layout := fmt.Sprintf(`"%s"`, time.RFC3339)
-	ts, err := time.Parse(layout, string(src))
+	src = bytes.Trim(src, "\"")
+	ts, err := strconv.ParseInt(string(src), 10, 64)
 	if err == nil {
-		*t = Timestamp(ts)
+		tm := time.Unix(ts/1e3, ts%1e3*1e6).UTC()
+		*t = Timestamp(tm)
 		return nil
 	}
-	layout = `"2006-01-02"`
-	ts, err = time.Parse(layout, string(src))
-	*t = Timestamp(ts)
+
+	layout := fmt.Sprintf(`%s`, time.RFC3339)
+	tm, err := time.Parse(layout, string(src))
+	if err == nil {
+		*t = Timestamp(tm)
+		return nil
+	}
+
+	layout = `2006-01-02`
+	tm, err = time.Parse(layout, string(src))
+	*t = Timestamp(tm)
 	return err
 }
 
