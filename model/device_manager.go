@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -54,27 +55,22 @@ func (m *DeviceManger) Find(filter bson.D, options *options.FindOptions) []*Devi
 		}
 		result = append(result, &elem)
 	}
-
+	if result == nil {
+		result = []*Device{}
+	}
 	return result
 }
 
 // update
-func (m *DeviceManger) UpdateOne(filter bson.D, update bson.D) *mongo.UpdateResult {
+func (m *DeviceManger) UpdateOne(filter bson.D, update bson.D) (*mongo.UpdateResult, error) {
 	updateResult, err := m.collection.UpdateOne(context.TODO(), filter, update)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return updateResult
+	return updateResult, err
 }
 
 // delete
-func (m *DeviceManger) DeleteMany(filter bson.D) *mongo.DeleteResult {
+func (m *DeviceManger) DeleteMany(filter bson.D) (*mongo.DeleteResult, error) {
 	deleteResult, err := m.collection.DeleteMany(context.TODO(), filter)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return deleteResult
+	return deleteResult, err
 }
 
 // drop
@@ -99,9 +95,38 @@ func (m *DeviceManger) GetAllDevices() []*Device {
 }
 
 func (m *DeviceManger) UpdateOneDevice(item *Device) (*Device, error) {
-	panic("implement me")
+	filter := bson.D{{"_id", bson.D{{"$eq", item.ID}}}}
+	item.UpdatedAt = Now()
+	data, err := bson.Marshal(item)
+	if err != nil {
+		return nil, fmt.Errorf("bson.Marshal: %v", err)
+	}
+	var doc bson.D
+	err = bson.Unmarshal(data, &doc)
+
+	if err != nil {
+		return nil, fmt.Errorf("bson.Unmarshal: %v", err)
+	}
+
+	update := bson.D{{"$set", doc}}
+
+	_, err = m.UpdateOne(filter, update)
+	if err != nil {
+		return nil, fmt.Errorf("UpdateOne: %v", err)
+	}
+
+	return m.FindOne(bson.D{{"_id", item.ID}})
 }
 
 func (m *DeviceManger) GetOneDevice(id primitive.ObjectID) (*Device, error) {
-	panic("implement me")
+	return m.FindOne(bson.D{{"_id", id}})
+}
+
+func (m *DeviceManger) DeleteDeviceList(ids []primitive.ObjectID) (ret *mongo.DeleteResult, err error) {
+	var objectIDs bson.A
+	for _, id := range ids {
+		objectIDs = append(objectIDs, id)
+	}
+	ret, err = m.DeleteMany(bson.D{{"_id", bson.D{{"$in", objectIDs}}}})
+	return
 }

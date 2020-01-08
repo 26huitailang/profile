@@ -51,6 +51,7 @@ func NewEchoApp(h *v1.ViewHandler) *echo.Echo {
 		apiV1.GET("/devices", h.FindDevices)
 		apiV1.POST("/device", h.CreateDevice)
 		apiV1.PUT("/devices/:id", h.EditDevice)
+		apiV1.DELETE("/devices", h.DeleteDevice)
 	}
 	return e
 }

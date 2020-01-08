@@ -3,6 +3,7 @@ package model
 import (
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"os"
@@ -117,6 +118,81 @@ func TestDeviceManger_GetAllDevices(t *testing.T) {
 
 			if got := len(m.GetAllDevices()); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetAllDevices() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestDeviceManger_UpdateOneDevice(t *testing.T) {
+	helperConfigInit()
+	device1 := NewDevice()
+	type fields struct {
+		collection *mongo.Collection
+	}
+	type args struct {
+		item *Device
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *Device
+		wantErr bool
+	}{
+		// Add test cases.
+		{name: "update ok", fields: fields{collection: initCollection(t, "device")}, args: args{item: device1}, want: device1, wantErr: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			m := &DeviceManger{
+				collection: tt.fields.collection,
+			}
+			defer helperDropCollection(m)
+			device1.Price = 66
+			_, err := m.InsertOne(device1)
+			if err != nil {
+				t.Errorf("Insert error: %v", err)
+			}
+			device1.Price = 99
+			got, err := m.UpdateOneDevice(tt.args.item)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("UpdateOneDevice() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			assert.Equal(t, tt.want.Price, got.Price)
+		})
+	}
+}
+
+func TestDeviceManger_DeleteDeviceList(t *testing.T) {
+	type fields struct {
+		collection *mongo.Collection
+	}
+	type args struct {
+		ids []primitive.ObjectID
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantRet *mongo.DeleteResult
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		panic("implement me")
+		t.Run(tt.name, func(t *testing.T) {
+			m := &DeviceManger{
+				collection: tt.fields.collection,
+			}
+			gotRet, err := m.DeleteDeviceList(tt.args.ids)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DeleteDeviceList() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotRet, tt.wantRet) {
+				t.Errorf("DeleteDeviceList() gotRet = %v, want %v", gotRet, tt.wantRet)
 			}
 		})
 	}
