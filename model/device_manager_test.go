@@ -86,7 +86,7 @@ func TestAssetManger_InsertOne_Time_OK(t *testing.T) {
 func TestDeviceManger_GetAllDevices(t *testing.T) {
 	helperConfigInit()
 	d1 := createOneDevice()
-	//d2 := createOneDevice()
+	d2 := createOneDevice()
 	type fields struct {
 		collection *mongo.Collection
 		devices    []*Device
@@ -94,11 +94,12 @@ func TestDeviceManger_GetAllDevices(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
-		want   []*Device
+		want   int
 	}{
 		// Add test cases.
-		{name: "no item", fields: fields{collection: initCollection(t, "device"), devices: nil}, want: []*Device{}},
-		{name: "one item", fields: fields{collection: initCollection(t, "device"), devices: []*Device{d1}}, want: []*Device{d1}},
+		{name: "no item", fields: fields{collection: initCollection(t, "device"), devices: nil}, want: 0},
+		{name: "one item", fields: fields{collection: initCollection(t, "device"), devices: []*Device{d1}}, want: 1},
+		{name: "two item", fields: fields{collection: initCollection(t, "device"), devices: []*Device{d1, d2}}, want: 2},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -114,7 +115,7 @@ func TestDeviceManger_GetAllDevices(t *testing.T) {
 				}
 			}
 
-			if got := m.GetAllDevices(); !reflect.DeepEqual(got, tt.want) {
+			if got := len(m.GetAllDevices()); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetAllDevices() = %v, want %v", got, tt.want)
 			}
 		})

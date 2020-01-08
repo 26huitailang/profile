@@ -1,7 +1,9 @@
 package model
 
 import (
+	"bytes"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"strconv"
 	"time"
 )
 
@@ -22,9 +24,9 @@ func NewDevice() *Device {
 		ID:                primitive.NewObjectID(),
 		Name:              "",
 		Description:       "",
-		Price:             0,
+		Price:             0.0,
 		Category:          0,
-		Images:            nil,
+		Images:            []Image{},
 		BuyAt:             Timestamp{},
 		ExpiredAt:         Timestamp{},
 	}
@@ -35,7 +37,7 @@ type Device struct {
 	ID                primitive.ObjectID `json:"id" bson:"_id"`
 	Name              string             `json:"name" bson:"name" validate:"required"`
 	Description       string             `json:"description" bson:"description"`
-	Price             uint               `json:"price" bson:"price" example:"9.9"`
+	Price             PriceType          `json:"price" bson:"price" example:"9.9"`
 	Category          uint               `json:"category" bson:"category" enums:"0,1,2" example:"1" validate:"required"`
 	Images            []Image            `json:"images" bson:"images"`
 	BuyAt             Timestamp          `json:"buyAt" bson:"buyAt"`
@@ -45,4 +47,16 @@ type Device struct {
 type Image struct {
 	BaseModelWithTime `bson:",inline"`
 	Path              string `json:"path" bson:"path"`
+}
+
+type PriceType float64
+
+func (p *PriceType) UnmarshalJSON(src []byte) error {
+	src = bytes.Trim(src, "\"")
+	price, err := strconv.ParseFloat(string(src), 64)
+	if err != nil {
+		return err
+	}
+	*p = PriceType(price)
+	return nil
 }
