@@ -34,6 +34,7 @@ func NewEchoApp(h *v1.ViewHandler) *echo.Echo {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.GET("/profiles/:username", h.Profiles)
 	e.POST("/user/login", h.Login)
+	e.POST("/user/logout", h.Logout)
 
 	apiAuthRoute := e.Group("")
 
@@ -44,7 +45,6 @@ func NewEchoApp(h *v1.ViewHandler) *echo.Echo {
 		TokenLookup: "header:Authorization",
 	}))
 	apiAuthRoute.GET("/user/info", h.UserInfo)
-	apiAuthRoute.POST("/user/logout", h.Logout)
 
 	apiV1 := apiAuthRoute.Group("/api/v1")
 	{
