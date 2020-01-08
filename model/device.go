@@ -13,6 +13,11 @@ const (
 	CategoryHouseholdAppliances             // 2
 )
 
+const (
+	DeviceStatusUsing string = "using" // 使用中
+	DeviceStatusStack string = "stack" // 收起
+)
+
 type BaseModelWithTime struct {
 	CreatedAt Timestamp `json:"createdAt" bson:"createdAt"`
 	UpdatedAt Timestamp `json:"updatedAt" bson:"updatedAt"`
@@ -29,6 +34,7 @@ func NewDevice() *Device {
 		Images:            []Image{},
 		BuyAt:             Timestamp{},
 		ExpiredAt:         Timestamp{},
+		Status:            DeviceStatusUsing,
 	}
 }
 
@@ -42,6 +48,7 @@ type Device struct {
 	Images            []Image            `json:"images" bson:"images"`
 	BuyAt             Timestamp          `json:"buyAt" bson:"buyAt"`
 	ExpiredAt         Timestamp          `json:"expiredAt" bson:"expiredAt"`
+	Status            string             `json:"status" bson:"status"`
 }
 
 type Image struct {
