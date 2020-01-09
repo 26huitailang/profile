@@ -1,0 +1,16 @@
+127.0.0.1:80 {
+  gzip
+  root {$PROFILE_CADDY_ROOT}
+  proxy /api http://127.0.0.1:5000 {
+    transparent
+  }
+  proxy /user http://127.0.0.1:5000 {
+    transparent
+  }
+  log access.log {
+    rotate_size 100 # Rotate a log when it reaches 100 MB
+    rotate_age  15  # Keep rotated log files for 14 days
+    rotate_keep 10  # Keep at most 10 rotated log files
+    rotate_compress # Compress rotated log files in gzip format
+  }
+}

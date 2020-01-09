@@ -25,3 +25,6 @@ data/
 
 # config
 local.yml
+
+# log
+*.log
