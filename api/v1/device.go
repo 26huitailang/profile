@@ -11,7 +11,7 @@ import (
 
 type IDeviceManager interface {
 	InsertOneDevice(item *model.Device) (*model.Device, error)
-	GetAllDevices() []*model.Device
+	GetAllDevices() ([]*model.Device, error)
 	UpdateOneDevice(item *model.Device) (*model.Device, error)
 	GetOneDevice(id primitive.ObjectID) (*model.Device, error)
 	DeleteDeviceList(ids []primitive.ObjectID) (*mongo.DeleteResult, error)
@@ -26,7 +26,7 @@ type IDeviceManager interface {
 // @Header 200 {string} Token "qwerty"
 // @Router /devices [get]
 func (h *ViewHandler) FindDevices(c echo.Context) error {
-	items := h.store.GetAllDevices()
+	items, _ := h.store.GetAllDevices()
 	return c.JSON(http.StatusOK, api.ResponseV1(api.CodeSuccess, "", items))
 }
 

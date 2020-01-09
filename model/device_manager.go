@@ -7,77 +7,18 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
+	"profile/config"
 )
 
 type DeviceManger struct {
-	collection *mongo.Collection
+	BaseManager
 }
 
-func NewDeviceManager(client *mongo.Client, db string) *DeviceManger {
+func NewDeviceManager(client *mongo.Client) *DeviceManger {
 	return &DeviceManger{
-		collection: client.Database(db).Collection("device"),
-	}
-}
-
-// insert
-func (m *DeviceManger) InsertOne(item *Device) (*mongo.InsertOneResult, error) {
-	insertResult, err := m.collection.InsertOne(context.TODO(), item)
-	return insertResult, err
-}
-func (m *DeviceManger) InsertMany(items []*Device) (*mongo.InsertManyResult, error) {
-	var data []interface{}
-	for _, item := range items {
-		data = append(data, item)
-	}
-	insertResult, err := m.collection.InsertMany(context.TODO(), data)
-	return insertResult, err
-}
-
-// find
-func (m *DeviceManger) FindOne(filter bson.D) (*Device, error) {
-	result := &Device{}
-	err := m.collection.FindOne(context.TODO(), filter).Decode(result)
-	return result, err
-}
-func (m *DeviceManger) Find(filter bson.D, options *options.FindOptions) []*Device {
-	var result []*Device
-	cur, err := m.collection.Find(context.TODO(), filter, options)
-	if err != nil {
-		panic(err)
-	}
-
-	for cur.Next(context.TODO()) {
-		var elem Device
-		err := cur.Decode(&elem)
-		if err != nil {
-			panic(err)
-		}
-		result = append(result, &elem)
-	}
-	if result == nil {
-		result = []*Device{}
-	}
-	return result
-}
-
-// update
-func (m *DeviceManger) UpdateOne(filter bson.D, update bson.D) (*mongo.UpdateResult, error) {
-	updateResult, err := m.collection.UpdateOne(context.TODO(), filter, update)
-	return updateResult, err
-}
-
-// delete
-func (m *DeviceManger) DeleteMany(filter bson.D) (*mongo.DeleteResult, error) {
-	deleteResult, err := m.collection.DeleteMany(context.TODO(), filter)
-	return deleteResult, err
-}
-
-// drop
-func (m *DeviceManger) DropCollection() {
-	err := m.collection.Drop(context.TODO())
-	if err != nil {
-		log.Fatal(err)
+		BaseManager: BaseManager{
+			collection: client.Database(config.Cfg.Mongo.DB).Collection("device"),
+		},
 	}
 }
 
@@ -87,11 +28,31 @@ func (m *DeviceManger) InsertOneDevice(item *Device) (*Device, error) {
 	if err != nil {
 		return nil, err
 	}
-	return m.FindOne(bson.D{{"_id", ret.InsertedID}})
+	singleResult := m.FindOne(bson.D{{"_id", ret.InsertedID}})
+	var device Device
+	err = singleResult.Decode(&device)
+	return &device, err
 }
 
-func (m *DeviceManger) GetAllDevices() []*Device {
-	return m.Find(bson.D{}, options.Find())
+func (m *DeviceManger) GetAllDevices() ([]*Device, error) {
+	result := make([]*Device, 0)
+
+	cur, err := m.FindMany(bson.D{}, options.Find())
+	if err != nil {
+		err = fmt.Errorf("GetAllDevices: %v", err)
+		return nil, err
+	}
+
+	for cur.Next(context.TODO()) {
+		var elem Device
+		err := cur.Decode(&elem)
+		if err != nil {
+			err = fmt.Errorf("GetAllDevices: %v", err)
+			return nil, err
+		}
+		result = append(result, &elem)
+	}
+	return result, nil
 }
 
 func (m *DeviceManger) UpdateOneDevice(item *Device) (*Device, error) {
@@ -115,11 +76,14 @@ func (m *DeviceManger) UpdateOneDevice(item *Device) (*Device, error) {
 		return nil, fmt.Errorf("UpdateOne: %v", err)
 	}
 
-	return m.FindOne(bson.D{{"_id", item.ID}})
+	return m.GetOneDevice(item.ID)
 }
 
 func (m *DeviceManger) GetOneDevice(id primitive.ObjectID) (*Device, error) {
-	return m.FindOne(bson.D{{"_id", id}})
+	singleResult := m.FindOne(bson.D{{"_id", id}})
+	var device Device
+	err := singleResult.Decode(&device)
+	return &device, err
 }
 
 func (m *DeviceManger) DeleteDeviceList(ids []primitive.ObjectID) (ret *mongo.DeleteResult, err error) {

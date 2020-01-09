@@ -147,8 +147,8 @@ func (s *StubDeviceManager) InsertOneDevice(item *model.Device) (*model.Device, 
 	return item, nil
 }
 
-func (s *StubDeviceManager) GetAllDevices() []*model.Device {
-	return s.Devices
+func (s *StubDeviceManager) GetAllDevices() ([]*model.Device, error) {
+	return s.Devices, nil
 }
 
 func (s *StubDeviceManager) UpdateOneDevice(item *model.Device) (*model.Device, error) {
