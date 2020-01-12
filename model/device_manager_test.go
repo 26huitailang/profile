@@ -1,4 +1,4 @@
-package model
+package model_test
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -8,21 +8,22 @@ import (
 	"os"
 	"profile/config"
 	"profile/database"
+	"profile/model"
 	"reflect"
 	"testing"
 )
 
 func TestAssetManger_InsertOne(t *testing.T) {
-	item1 := NewDevice()
+	item1 := model.NewDevice()
 	item1.Name = "0"
 	item1.Description = "desc"
 	item1.Price = 99
 	item1.Category = 1
-	item1.BuyAt = Now()
+	item1.BuyAt = model.Now()
 
 	testCases := []struct {
 		name string
-		data *Device
+		data *model.Device
 		want interface{}
 	}{
 		{name: "assert one asset", data: item1, want: item1.ID},
@@ -35,7 +36,7 @@ func TestAssetManger_InsertOne(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			manager := NewDeviceManager(client)
+			manager := model.NewDeviceManager(client)
 			defer helperDropCollection(manager)
 
 			insertResult, err := manager.InsertOne(item1)
@@ -48,8 +49,8 @@ func TestAssetManger_InsertOne(t *testing.T) {
 }
 
 func TestAssetManger_InsertOne_Time_OK(t *testing.T) {
-	now := Now()
-	item1 := NewDevice()
+	now := model.Now()
+	item1 := model.NewDevice()
 	item1.Name = "1"
 	item1.Description = "desc"
 	item1.Price = 99
@@ -58,8 +59,8 @@ func TestAssetManger_InsertOne_Time_OK(t *testing.T) {
 
 	testCases := []struct {
 		name string
-		data *Device
-		want Timestamp
+		data *model.Device
+		want model.Timestamp
 	}{
 		{name: "insert date with millisecond accuracy", data: item1, want: now},
 	}
@@ -91,7 +92,7 @@ func TestDeviceManger_GetAllDevices(t *testing.T) {
 	d1 := createOneDevice()
 	d2 := createOneDevice()
 	type fields struct {
-		devices []*Device
+		devices []*model.Device
 	}
 	tests := []struct {
 		name   string
@@ -100,8 +101,8 @@ func TestDeviceManger_GetAllDevices(t *testing.T) {
 	}{
 		// Add test cases.
 		{name: "no item", fields: fields{devices: nil}, want: 0},
-		{name: "one item", fields: fields{devices: []*Device{d1}}, want: 1},
-		{name: "two item", fields: fields{devices: []*Device{d1, d2}}, want: 2},
+		{name: "one item", fields: fields{devices: []*model.Device{d1}}, want: 1},
+		{name: "two item", fields: fields{devices: []*model.Device{d1, d2}}, want: 2},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -129,17 +130,17 @@ func TestDeviceManger_GetAllDevices(t *testing.T) {
 
 func TestDeviceManger_UpdateOneDevice(t *testing.T) {
 	helperConfigInit()
-	device1 := NewDevice()
+	device1 := model.NewDevice()
 	type fields struct {
 	}
 	type args struct {
-		item *Device
+		item *model.Device
 	}
 	tests := []struct {
 		name    string
 		fields  fields
 		args    args
-		want    *Device
+		want    *model.Device
 		wantErr bool
 	}{
 		// Add test cases.
@@ -167,12 +168,12 @@ func TestDeviceManger_UpdateOneDevice(t *testing.T) {
 
 func TestDeviceManger_DeleteDeviceList(t *testing.T) {
 	helperConfigInit()
-	device1 := NewDevice()
-	device2 := NewDevice()
+	device1 := model.NewDevice()
+	device2 := model.NewDevice()
 
 	type fields struct {
 		collection *mongo.Collection
-		devices    []*Device
+		devices    []*model.Device
 	}
 	type args struct {
 		ids []primitive.ObjectID
@@ -209,7 +210,11 @@ func TestDeviceManger_DeleteDeviceList(t *testing.T) {
 }
 
 /* helper func */
-func helperDropCollection(m *DeviceManger) {
+type dropper interface {
+	DropCollection()
+}
+
+func helperDropCollection(m dropper) {
 	m.DropCollection()
 }
 
@@ -226,9 +231,9 @@ func initMongoClient(t *testing.T) *mongo.Client {
 	return client
 }
 
-func initDeviceManager(t *testing.T) *DeviceManger {
+func initDeviceManager(t *testing.T) *model.DeviceManger {
 	client := initMongoClient(t)
-	manager := NewDeviceManager(client)
+	manager := model.NewDeviceManager(client)
 	return manager
 }
 
@@ -238,9 +243,9 @@ func initCollection(t *testing.T, collectionName string) *mongo.Collection {
 	return collection
 }
 
-func createOneDevice() *Device {
-	now := Now()
-	item1 := NewDevice()
+func createOneDevice() *model.Device {
+	now := model.Now()
+	item1 := model.NewDevice()
 	item1.Name = "1"
 	item1.Description = "desc"
 	item1.Price = 99

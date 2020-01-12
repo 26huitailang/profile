@@ -9,6 +9,7 @@ import (
 const (
 	CodeSuccess = 20000
 	// 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
+	CodeInvalidLogin         = 50007
 	CodeIllegalToken         = 50008
 	CodeOtherClientsLoggedIn = 50012
 	CodeTokenExpired         = 50014

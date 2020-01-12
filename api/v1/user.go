@@ -14,8 +14,9 @@ func (h *ViewHandler) Login(c echo.Context) error {
 	username := data["username"]
 	password := data["password"]
 
+	//
 	if username != "admin" || password != "123123" {
-		return echo.ErrUnauthorized
+		return c.JSON(http.StatusOK, echo.Map{"code": api.CodeInvalidLogin, "message": "用户名或密码错误"})
 	}
 
 	t, err := auth.GenJWT("admin", []byte("secret-super-passwd"), time.Hour*6)

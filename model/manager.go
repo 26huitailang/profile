@@ -8,8 +8,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func NewManager(deviceManger *DeviceManger) *Manager {
-	return &Manager{DeviceManger: deviceManger}
+func NewManager(deviceManger *DeviceManger, userManager *UserManager) *Manager {
+	return &Manager{DeviceManger: deviceManger, UserManager: userManager}
 }
 
 type IModelManager interface {
@@ -24,6 +24,7 @@ type IModelManager interface {
 
 type Manager struct {
 	*DeviceManger
+	*UserManager
 }
 
 type BaseManager struct {

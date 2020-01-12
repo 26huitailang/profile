@@ -34,7 +34,8 @@ func main() {
 	}
 
 	deviceManager := model.NewDeviceManager(client)
-	store := model.NewManager(deviceManager)
+	userManager := model.NewUserManager(client)
+	store := model.NewManager(deviceManager, userManager)
 	h := v1.NewViewHandler(store)
 
 	e := app.NewEchoApp(h)
